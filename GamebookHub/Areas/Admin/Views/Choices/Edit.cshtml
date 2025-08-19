@@ -1,0 +1,43 @@
+﻿@model GamebookHub.Models.GameChoice
+@{
+    ViewData["Title"] = "Editar Choice";
+}
+<h3>@ViewData["Title"]</h3>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken() <!-- Proteção CSRF -->
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="FromNodeId" />
+
+    <div class="mb-3">
+        <label asp-for="Label" class="form-label"></label>
+        <input asp-for="Label" class="form-control" />
+        <span asp-validation-for="Label" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ToNodeKey" class="form-label"></label>
+        <input asp-for="ToNodeKey" class="form-control" />
+        <span asp-validation-for="ToNodeKey" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="RequiresFlags" class="form-label"></label>
+        <textarea asp-for="RequiresFlags" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="RequiresFlags" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SetsFlags" class="form-label"></label>
+        <textarea asp-for="SetsFlags" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="SetsFlags" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Salvar</button>
+    <a class="btn btn-secondary"
+       asp-area="Admin" asp-controller="Choices" asp-action="Index"
+       asp-route-fromNodeId="@Model.FromNodeId">Voltar</a>
+</form>

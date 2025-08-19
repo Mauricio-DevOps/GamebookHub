@@ -1,0 +1,37 @@
+﻿@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Biblioteca";
+    var q = ViewData["q"] as string ?? "";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/biblioteca.css" asp-append-version="true" />
+}
+
+<div class="lib-container">
+    <h1 class="lib-title">Biblioteca</h1>
+
+    <form method="get" class="lib-search">
+        <input name="q" class="form-control" placeholder="Buscar título..." value="@(ViewData["q"] as string ?? "")" />
+        <button class="btn btn-primary" type="submit">Buscar</button>
+    </form>
+
+    <div class="lib-grid">
+        @foreach (var g in Model)
+        {
+            <article class="card h-100 shadow-sm">
+                <img class="card-img-top lib-thumb" src="@(g.CoverUrl ?? "/images/placeholder.png")" alt="Capa: @g.Title" loading="lazy">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="lib-card-title mb-1">@g.Title</h2>
+                    @if (!string.IsNullOrWhiteSpace((string)g.Description))
+                    {
+                        <p class="lib-card-desc mb-3">@g.Description</p>
+                    }
+                    <a class="btn btn-primary mt-auto align-self-start" href='@Url.Action("Details", "Library", new { slug = g.Slug })'>Abrir</a>
+                </div>
+            </article>
+        }
+    </div>
+</div>
+
+

@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Importar JSON";
+}
+<h3>@ViewData["Title"]</h3>
+
+<form asp-area="Admin" asp-controller="Gamebooks" asp-action="Import" method="post">
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" name="overwrite" id="overwrite" checked />
+        <label class="form-check-label" for="overwrite">Sobrescrever nós existentes</label>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">JSON</label>
+        <textarea name="json" class="form-control" rows="18"></textarea>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Importar</button>
+    <a class="btn btn-secondary" asp-area="Admin" asp-controller="Gamebooks" asp-action="Index">Voltar</a>
+</form>

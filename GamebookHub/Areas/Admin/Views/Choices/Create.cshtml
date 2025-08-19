@@ -1,0 +1,45 @@
+﻿@model GamebookHub.Models.GameChoice
+@{
+    ViewData["Title"] = "Nova Choice";
+}
+<h3>@ViewData["Title"]</h3>
+
+<form asp-area="Admin" asp-controller="Choices" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <input type="hidden" asp-for="FromNodeId" />
+
+    <div class="mb-3">
+        <label class="form-label" asp-for="Label"></label>
+        <input asp-for="Label" class="form-control" />
+        <span asp-validation-for="Label" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" asp-for="ToNodeKey"></label>
+        <input asp-for="ToNodeKey" class="form-control" />
+        <small class="text-muted">Deve ser igual ao <code>Key</code> de um nó do mesmo Gamebook.</small>
+        <span asp-validation-for="ToNodeKey" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">RequiresFlags (JSON)</label>
+        <textarea asp-for="RequiresFlags" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">SetsFlags (JSON)</label>
+        <textarea asp-for="SetsFlags" class="form-control" rows="3"></textarea>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Salvar</button>
+    <a class="btn btn-secondary"
+       asp-area="Admin" asp-controller="Choices" asp-action="Index"
+       asp-route-fromNodeId="@Model.FromNodeId">Voltar</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,58 @@
+﻿@using Markdig
+@model (GamebookHub.Models.Gamebook gb, GamebookHub.Models.GameNode node, GamebookHub.Models.Playthrough pt)
+
+@{
+    ViewData["Title"] = Model.gb.Title;
+    var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+    string html = Markdown.ToHtml(Model.node.Text ?? "", pipeline);
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/node.css" asp-append-version="true" />
+}
+
+<div class="game-wrap">
+
+    <a href="@Url.Action("Details", "Library", new { slug = Model.gb.Slug })"
+       class="game-back">&larr; Voltar ao livro</a>
+
+    <h1 class="game-title">@Model.gb.Title</h1>
+
+    <!-- Quadro MAIOR: texto do nó (sem exibir "Nó: ...") -->
+    <section class="card shadow-sm game-card">
+        <div class="card-body">
+            <div class="game-content">
+                @Html.Raw(html)
+            </div>
+        </div>
+    </section>
+
+    @if (Model.node.IsEnding)
+    {
+        <div class="game-end">
+            <div class="alert alert-success mb-3">Fim de jogo.</div>
+            <form asp-action="Restart" asp-controller="Game" asp-route-slug="@Model.gb.Slug" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-primary">Recomeçar</button>
+            </form>
+        </div>
+    }
+    else
+    {
+        <!-- Quadro MENOR: opções -->
+        <div class="card shadow-sm game-choices">
+            <form method="post" action="@Url.Action("Choose", "Game", new { slug = Model.gb.Slug })">
+                @Html.AntiForgeryToken()
+                <div class="list-group list-group-flush">
+                    @foreach (var c in Model.node.Choices)
+                    {
+                        <button class="list-group-item list-group-item-action game-choice"
+                                type="submit" name="choiceId" value="@c.Id">
+                            @c.Label
+                        </button>
+                    }
+                </div>
+            </form>
+        </div>
+    }
+</div>

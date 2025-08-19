@@ -1,0 +1,120 @@
+﻿@model GamebookHub.Models.Gamebook
+@using GamebookHub.Models
+@using System.Linq
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Gamebook</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Title)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.Title)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Slug)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.Slug)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Description)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.Description)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.CoverUrl)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.CoverUrl)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.AuthorId)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.AuthorId)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.PublishedAt)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.PublishedAt)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.IsPublished)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.IsPublished)</dd>
+    </dl>
+</div>
+
+@if (Model?.CharacterSheet != null)
+{
+    <div class="mt-4">
+        <h4>Ficha do Personagem</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">Tem ficha?</dt>
+            <dd class="col-sm-10">@(Model.CharacterSheet.Enabled ? "Sim" : "Não")</dd>
+
+            <dt class="col-sm-2">Inventário habilitado?</dt>
+            <dd class="col-sm-10">@((Model.CharacterSheet.Inventory?.Enabled ?? false) ? "Sim" : "Não")</dd>
+
+            @if (Model.CharacterSheet.Inventory?.Enabled == true)
+            {
+                <dt class="col-sm-2">Modo</dt>
+                <dd class="col-sm-10">@Model.CharacterSheet.Inventory.Mode</dd>
+
+                @if (Model.CharacterSheet.Inventory.Mode == InventoryMode.Slots)
+                {
+                    <dt class="col-sm-2">Slots</dt>
+                    <dd class="col-sm-10">@Model.CharacterSheet.Inventory.Slots</dd>
+                }
+                else if (Model.CharacterSheet.Inventory.Mode == InventoryMode.Weight)
+                {
+                    <dt class="col-sm-2">Capacidade</dt>
+                    <dd class="col-sm-10">@Model.CharacterSheet.Inventory.Capacity</dd>
+                }
+            }
+        </dl>
+
+        @{
+            var attrs = (Model?.CharacterSheet?.Attributes ?? new List<AttributeDefinition>())
+            .OrderBy(a => a.Order)
+            .ToList();
+        }
+
+        @if (attrs.Count > 0)
+        {
+            <div class="table-responsive">
+                <table class="table table-sm table-striped align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width:70px;">Ordem</th>
+                            <th style="width:140px;">Key</th>
+                            <th style="width:180px;">Label</th>
+                            <th style="width:110px;">Tipo</th>
+                            <th style="width:90px;">Min</th>
+                            <th style="width:90px;">Max</th>
+                            <th style="width:110px;">Default</th>
+                            <th>Enum Options</th>
+                            <th style="width:90px;">Visível</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var a in attrs)
+                        {
+                            <tr>
+                                <td>@a.Order</td>
+                                <td><code>@a.Key</code></td>
+                                <td>@a.Label</td>
+                                <td>@a.Type</td>
+                                <td>@a.Min</td>
+                                <td>@a.Max</td>
+                                <td>@a.Default</td>
+                                <td>@a.EnumOptions</td>
+                                <td>@(a.Visible ? "Sim" : "Não")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted mb-0">Nenhum atributo definido.</p>
+        }
+
+    </div>
+}
+
+<div class="mt-4">
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

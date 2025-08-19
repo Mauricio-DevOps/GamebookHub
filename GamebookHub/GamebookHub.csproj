@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-GamebookHub-2d35047a-47be-4ec1-91b0-3ab44000850f</UserSecretsId>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Markdig" Version="0.41.3" />
+
+		<!-- ASP.NET Core / Identity / EF Core (TODOS 8.0.18) -->
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.18" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.18" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.18" />
+
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.18" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.18" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.18" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.18">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+
+		<!-- Code generation do Scaffold -->
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+	</ItemGroup>
+
+
+</Project>

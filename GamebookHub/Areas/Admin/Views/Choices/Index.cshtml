@@ -1,0 +1,35 @@
+﻿@model IEnumerable<GamebookHub.Models.GameChoice>
+@{
+    var node = ViewBag.Node as GamebookHub.Models.GameNode;
+    ViewData["Title"] = $"Choices - Nó {node?.Key}";
+}
+<h3>@ViewData["Title"]</h3>
+<p>
+    <a class="btn btn-primary"
+       asp-area="Admin" asp-controller="Choices" asp-action="Create"
+       asp-route-fromNodeId="@node!.Id">Nova Choice</a>
+    <a class="btn btn-secondary"
+       asp-area="Admin" asp-controller="Nodes" asp-action="Index"
+       asp-route-gamebookId="@node!.GamebookId">Voltar</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr><th>Id</th><th>Label</th><th>ToNodeKey</th><th></th></tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.Id</td>
+                <td>@c.Label</td>
+                <td><code>@c.ToNodeKey</code></td>
+                <td class="text-end">
+                    <a class="btn btn-sm btn-outline-secondary"
+                       asp-area="Admin" asp-controller="Choices" asp-action="Edit" asp-route-id="@c.Id">Editar</a>
+                    <a class="btn btn-sm btn-outline-danger"
+                       asp-area="Admin" asp-controller="Choices" asp-action="Delete" asp-route-id="@c.Id">Excluir</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

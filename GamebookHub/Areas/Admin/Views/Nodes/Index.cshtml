@@ -1,0 +1,37 @@
+﻿@model IEnumerable<GamebookHub.Models.GameNode>
+@{
+    var gb = ViewBag.Gamebook as GamebookHub.Models.Gamebook;
+    ViewData["Title"] = $"Nós - {gb?.Title}";
+}
+<h3>@ViewData["Title"]</h3>
+<p>
+    <a class="btn btn-primary"
+       asp-area="Admin" asp-controller="Nodes" asp-action="Create"
+       asp-route-gamebookId="@gb!.Id">Novo Nó</a>
+    <a class="btn btn-secondary"
+       asp-area="Admin" asp-controller="Gamebooks" asp-action="Index">Voltar</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr><th>Id</th><th>Key</th><th>IsEnding</th><th></th></tr>
+    </thead>
+    <tbody>
+        @foreach (var n in Model)
+        {
+            <tr>
+                <td>@n.Id</td>
+                <td><code>@n.Key</code></td>
+                <td>@n.IsEnding</td>
+                <td class="text-end">
+                    <a class="btn btn-sm btn-outline-primary"
+                       asp-area="Admin" asp-controller="Choices" asp-action="Index"
+                       asp-route-fromNodeId="@n.Id">Choices</a>
+                    <a class="btn btn-sm btn-outline-secondary"
+                       asp-area="Admin" asp-controller="Nodes" asp-action="Edit" asp-route-id="@n.Id">Editar</a>
+                    <a class="btn btn-sm btn-outline-danger"
+                       asp-area="Admin" asp-controller="Nodes" asp-action="Delete" asp-route-id="@n.Id">Excluir</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

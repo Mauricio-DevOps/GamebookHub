@@ -1,0 +1,13 @@
+﻿@model GamebookHub.Models.GameNode
+@{
+    ViewData["Title"] = "Excluir Nó";
+}
+<h3>@ViewData["Title"]</h3>
+<p>Confirma excluir o nó <code>@Model.Key</code>?</p>
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button class="btn btn-danger" type="submit">Excluir</button>
+    <a class="btn btn-secondary"
+       asp-area="Admin" asp-controller="Nodes" asp-action="Index"
+       asp-route-gamebookId="@Model.GamebookId">Cancelar</a>
+</form>

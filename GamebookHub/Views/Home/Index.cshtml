@@ -1,0 +1,241 @@
+﻿@{
+    ViewData["Title"] = "Bem-vindo";
+}
+
+<style>
+    /* ------------------------------
+         Tokens (cores, raios, sombras)
+      -------------------------------*/
+    :root {
+        --brand-1: #7e46e4;
+        --brand-2: #a45de6;
+        --brand-3: #f3a4d6;
+        --ink: #1f2937;
+        --muted: #6b7280;
+        --radius: 16px;
+        --radius-sm: 12px;
+        --shadow: 0 18px 50px rgba(0,0,0,.18);
+        --shadow-soft: 0 10px 30px rgba(0,0,0,.18);
+        --container: 1100px;
+    }
+
+    /* ------------------------------
+         HERO (full width com gradiente)
+      -------------------------------*/
+    .home-hero {
+        min-height: calc(100vh - 180px); /* espaço p/ navbar + footer */
+        background: linear-gradient(180deg,var(--brand-1) 0%,var(--brand-2) 40%,var(--brand-3) 100%);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        padding: 48px 0;
+    }
+
+        .home-hero .hero-wrap {
+            width: 100%;
+            max-width: var(--container);
+            margin: 0 auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 1.15fr .85fr;
+            gap: 28px;
+        }
+
+    .hero-title {
+        margin: 0 0 12px;
+        font-size: clamp(2rem,4.4vw,3.2rem);
+        line-height: 1.15;
+        font-weight: 800;
+        text-shadow: 0 3px 18px rgba(0,0,0,.25);
+    }
+
+    .hero-sub {
+        margin: 0 0 22px;
+        font-size: clamp(1rem,1.4vw,1.15rem);
+        color: rgba(255,255,255,.92);
+    }
+
+    .hero-cta .btn {
+        height: 48px;
+        padding: 0 18px;
+        border: 0;
+        border-radius: var(--radius-sm);
+        font-weight: 700;
+        letter-spacing: .2px;
+    }
+
+    .btn-primary-hero {
+        background: linear-gradient(90deg,#6b33dd 0%,#8e4ef0 100%);
+        color: #fff;
+        box-shadow: var(--shadow-soft);
+    }
+
+        .btn-primary-hero:hover {
+            filter: brightness(1.05);
+        }
+
+        .btn-primary-hero:focus-visible {
+            outline: 3px solid rgba(164,93,230,.35);
+            outline-offset: 2px;
+        }
+
+    .btn-outline-hero {
+        background: transparent;
+        color: #fff;
+        border: 2px solid rgba(255,255,255,.7);
+    }
+
+        .btn-outline-hero:hover {
+            background: rgba(255,255,255,.08);
+        }
+
+        .btn-outline-hero:focus-visible {
+            outline: 3px solid rgba(255,255,255,.5);
+            outline-offset: 2px;
+        }
+
+    .hero-card {
+        color: #fff;
+        background: rgba(255,255,255,.18);
+        border: 1px solid rgba(255,255,255,.35);
+        backdrop-filter: blur(6px);
+        border-radius: var(--radius);
+        padding: 18px;
+        box-shadow: 0 8px 30px rgba(0,0,0,.2);
+    }
+
+    /* ------------------------------
+         Seção de Ações (cards)
+      -------------------------------*/
+    .home-actions {
+        width: 100%;
+        max-width: var(--container);
+        margin: -40px auto 56px; /* overlap elegante com o hero */
+        padding: 0 24px;
+    }
+
+    .home-grid {
+        display: grid;
+        gap: 18px;
+        grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+    }
+
+    .action-card {
+        background: #fff;
+        border: 1px solid #eef0f6;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .action-title {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--ink);
+    }
+
+    .action-text {
+        margin: 0 0 6px;
+        color: var(--muted);
+        font-size: .98rem;
+    }
+
+    .action-card .btn {
+        align-self: flex-start;
+        height: 42px;
+        padding: 0 14px;
+        border: 0;
+        border-radius: 10px;
+        background: #6b33dd;
+        color: #fff;
+        font-weight: 700;
+    }
+
+        .action-card .btn:hover {
+            filter: brightness(1.05);
+        }
+
+        .action-card .btn:focus-visible {
+            outline: 3px solid rgba(164,93,230,.3);
+            outline-offset: 2px;
+        }
+
+
+</style>
+
+
+<!-- HERO -->
+<section class="home-hero">
+
+    <div class="hero-wrap">
+        <div>
+            <h1 class="hero-title">Bem-vindo ao GamebookHub</h1>
+            <p class="hero-sub">
+                Sua biblioteca de <strong>livros-jogo</strong> para ler e interagir. Escolha caminhos,
+                salve seu progresso e explore novas histórias.
+            </p>
+
+            @*<div class="hero-cta d-flex gap-2">
+                <a class="btn btn-primary-hero" asp-controller="Library" asp-action="Index">
+                    Ir para a Biblioteca
+                </a>
+                @* Exibe para autores/admins 
+                if (User.IsInRole("Admin") || User.IsInRole("Author"))
+                {
+                    <a class="btn btn-outline-hero" asp-area="Admin" asp-controller="Home" asp-action="Index">
+                        Área Admin
+                    </a>
+                }
+            </div>*@
+        </div>
+
+        <div class="hero-card">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <div class="fw-bold">Pronto para jogar?</div>
+                    <div class="small" style="opacity:.85">
+                        Veja sua biblioteca, continue de onde parou e descubra novidades.
+                    </div>
+                </div>
+                <div class="text-end">
+                    <div class="fw-bold">Online</div>
+                    <div class="small" style="opacity:.85">você + comunidade</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- AÇÕES RÁPIDAS -->
+<section class="home-actions">
+    <div class="home-grid">
+
+        <div class="action-card">
+            <h3 class="action-title">Biblioteca</h3>
+            <p class="action-text">Navegue pelos livros-jogo disponíveis e comece a jogar agora.</p>
+            <a class="btn" asp-controller="Library" asp-action="Index">Abrir Biblioteca</a>
+        </div>
+
+        @if (User.IsInRole("Admin") || User.IsInRole("Author"))
+        {
+            <div class="action-card">
+                <h3 class="action-title">Criar / Editar</h3>
+                <p class="action-text">Gerencie livros, nós e escolhas na Área Admin.</p>
+                <a class="btn" asp-area="Admin" asp-controller="Gamebooks" asp-action="Index">
+                    Gerenciar livros
+                </a>
+            </div>
+        }
+
+        @* <div class="action-card">
+            <h3 class="action-title">Seu Perfil</h3>
+            <p class="action-text">Atualize suas informações e preferências de conta.</p>
+            <a class="btn" asp-area="Identity" asp-page="/Account/Manage/Index">Abrir Perfil</a>
+        </div> *@
+
+    </div>
+</section>

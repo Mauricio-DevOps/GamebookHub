@@ -1,0 +1,51 @@
+﻿:root {
+    --admin-nav-h: 64px;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+    body.admin-body {
+        min-width: 100%;
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+/* Subnav logo abaixo da navbar */
+.admin-subnav {
+    position: sticky;
+    top: var(--admin-nav-h);
+    z-index: 1025;
+    background: rgba(17,24,39,.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,.12);
+    box-shadow: 0 10px 24px rgba(0,0,0,.10);
+}
+
+    .admin-subnav .container-xxl {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+    }
+
+    .admin-subnav .btn {
+        border-radius: 999px;
+        font-weight: 700;
+        padding: .46rem 1rem;
+        color: #fff;
+        border-color: rgba(255,255,255,.35);
+    }
+
+        .admin-subnav .btn.active {
+            background: #111827;
+            border-color: transparent;
+        }
+
+

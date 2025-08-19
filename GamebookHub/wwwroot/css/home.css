@@ -1,0 +1,17 @@
+﻿@media (max-width: 992px) {
+    .home-hero .hero-wrap {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        text-align: center;
+    }
+
+    .hero-cta {
+        justify-content: center;
+    }
+
+    .hero-card {
+        justify-self: center;
+        max-width: 520px;
+        width: 100%;
+    }
+}

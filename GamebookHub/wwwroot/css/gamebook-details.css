@@ -1,0 +1,60 @@
+﻿/* Container geral da página */
+.gamebook-container {
+    min-height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    gap: 24px;
+}
+
+/* Botão de voltar no topo esquerdo */
+.back-container {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+}
+
+/* Conteúdo central alinhado */
+.gamebook-content {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Imagem da capa */
+.gamebook-cover {
+    width: 200px;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Texto e botão */
+.gamebook-info {
+    max-width: 500px;
+    text-align: center;
+}
+
+    .gamebook-info h2 {
+        font-size: 2rem;
+        margin-bottom: 8px;
+    }
+
+    .gamebook-info p {
+        margin-bottom: 16px;
+        font-size: 1.05rem;
+        color: #e0e0e0;
+    }
+
+/* Responsivo */
+@media (max-width: 576px) {
+    .gamebook-cover {
+        width: 160px;
+        height: 220px;
+    }
+}

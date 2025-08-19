@@ -1,0 +1,78 @@
+﻿/* --- Shell da página --- */
+.game-wrap {
+    width: min(96vw, 1200px);
+    margin: 0 auto;
+    padding: 24px 16px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+/* topo esquerdo */
+.game-back {
+    align-self: flex-start;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+    .game-back:hover {
+        text-decoration: underline;
+    }
+
+/* título central */
+.game-title {
+    margin: 0;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+/* quadro MAIOR do conteúdo */
+.game-card {
+    width: min(100%, 1100px);
+    min-height: 360px; /* aumenta a presença na tela */
+    border-radius: .5rem;
+}
+
+    .game-card .card-body {
+        padding: 24px;
+    }
+
+/* tipografia do texto do nó */
+.game-content {
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+    .game-content p {
+        margin-bottom: .9rem;
+    }
+
+/* quadro MENOR das opções */
+.game-choices {
+    width: min(100%, 900px);
+    border-radius: .5rem;
+}
+
+.game-choice {
+    padding: .9rem 1rem;
+    font-size: 1.02rem;
+}
+
+/* fim de jogo */
+.game-end {
+    width: min(100%, 900px);
+    text-align: center;
+}
+
+/* ajuste leve em telas menores */
+@media (max-width: 576px) {
+    .game-title {
+        font-size: 1.6rem;
+    }
+
+    .game-card .card-body {
+        padding: 16px;
+    }
+}

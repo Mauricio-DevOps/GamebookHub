@@ -1,0 +1,26 @@
+﻿@model GamebookHub.Models.GameNode
+@{
+    ViewData["Title"] = "Editar Nó";
+}
+<h3>@ViewData["Title"]</h3>
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="GamebookId" />
+    <div class="mb-3">
+        <label class="form-label">Key</label>
+        <input asp-for="Key" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Texto (Markdown)</label>
+        <textarea asp-for="Text" class="form-control" rows="6"></textarea>
+    </div>
+    <div class="form-check mb-3">
+        <input asp-for="IsEnding" class="form-check-input" />
+        <label class="form-check-label" asp-for="IsEnding">Final?</label>
+    </div>
+    <button class="btn btn-primary" type="submit">Salvar</button>
+    <a class="btn btn-secondary"
+       asp-area="Admin" asp-controller="Nodes" asp-action="Index"
+       asp-route-gamebookId="@Model.GamebookId">Voltar</a>
+</form>
