@@ -47,7 +47,7 @@ namespace GamebookHub.Areas.Admin.Controllers
 
             return View(gamebook);
         }
-
+        //So para teste
 
         // GET: Admin/Gamebooks/Create
         public IActionResult Create()
