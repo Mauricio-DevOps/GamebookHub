@@ -49,6 +49,15 @@
                                             Gerenciar livros
                                         </a>
                                     </li>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li>
+                                            <a class="dropdown-item"
+                                               asp-controller="Account" asp-action="CreateUser">
+                                                Cadastrar usuário
+                                            </a>
+                                        </li>
+                                    }
                                     @* adicione mais opções aqui; quando enviar o link exato eu ajusto *@
                                 </ul>
                             </li>

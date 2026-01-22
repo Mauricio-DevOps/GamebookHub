@@ -1,8 +1,9 @@
 using GamebookHub.Data;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using GamebookHub.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,26 +12,21 @@ var cs = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(cs));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddSingleton<DemoUserStore>();
 
-// Identity + Roles
+// Login fake baseado em cookie
 builder.Services
-    .AddDefaultIdentity<IdentityUser>(o =>
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(o =>
     {
-        o.SignIn.RequireConfirmedAccount = false;
-        o.Password.RequireDigit = true;
-        o.Password.RequireUppercase = false;
-        o.Password.RequireNonAlphanumeric = false;
-        o.Password.RequiredLength = 6;
-    })
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+        o.LoginPath = "/Account/Login";
+        o.AccessDeniedPath = "/Account/Login";
+        o.LogoutPath = "/Account/Logout";
+        o.Cookie.Name = "GamebookHub.Auth";
+        o.SlidingExpiration = true;
+    });
 
-// Cookie do Identity
-builder.Services.ConfigureApplicationCookie(o =>
-{
-    o.LoginPath = "/Identity/Account/Login";
-    o.AccessDeniedPath = "/Identity/Account/AccessDenied";
-});
+builder.Services.AddAuthorization();
 
 // MVC exige autenticado por padrão
 builder.Services.AddControllersWithViews(o =>
@@ -39,13 +35,6 @@ builder.Services.AddControllersWithViews(o =>
         .RequireAuthenticatedUser()
         .Build();
     o.Filters.Add(new AuthorizeFilter(policy));
-});
-
-// >>> Faltava isto <<<
-builder.Services.AddRazorPages(options =>
-{
-    // opcional, garante anônimo em toda a pasta Account
-    options.Conventions.AllowAnonymousToAreaFolder("Identity", "/Account");
 });
 
 var app = builder.Build();
@@ -72,6 +61,5 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages(); // necessário para Identity
 
 app.Run();
