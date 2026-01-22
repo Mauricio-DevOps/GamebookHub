@@ -1,35 +1,164 @@
-﻿@model IEnumerable<GamebookHub.Models.GameChoice>
+@model IEnumerable<GamebookHub.Models.GameChoice>
 @{
     var node = ViewBag.Node as GamebookHub.Models.GameNode;
     ViewData["Title"] = $"Choices - Nó {node?.Key}";
+    Layout = "/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var choices = Model.ToList();
 }
-<h3>@ViewData["Title"]</h3>
-<p>
-    <a class="btn btn-primary"
-       asp-area="Admin" asp-controller="Choices" asp-action="Create"
-       asp-route-fromNodeId="@node!.Id">Nova Choice</a>
-    <a class="btn btn-secondary"
-       asp-area="Admin" asp-controller="Nodes" asp-action="Index"
-       asp-route-gamebookId="@node!.GamebookId">Voltar</a>
-</p>
-<table class="table table-striped">
-    <thead>
-        <tr><th>Id</th><th>Label</th><th>ToNodeKey</th><th></th></tr>
-    </thead>
-    <tbody>
-        @foreach (var c in Model)
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-choices-index.css" asp-append-version="true" />
+}
+
+<!-- PAGE HEADER -->
+<div class="gb-choices-header">
+    <div class="container-xxl">
+        <div class="gb-header-top">
+            <a class="btn btn-secondary btn-sm"
+               asp-area="Admin" asp-controller="Nodes" asp-action="Index"
+               asp-route-gamebookId="@node!.GamebookId">
+                <i class="bi bi-arrow-left"></i>
+                Voltar aos Nós
+            </a>
+            <a class="btn btn-light btn-sm"
+               asp-area="Admin" asp-controller="Choices" asp-action="Create"
+               asp-route-fromNodeId="@node!.Id">
+                <i class="bi bi-plus-circle"></i>
+                Nova Choice
+            </a>
+        </div>
+        <div class="gb-header-content">
+            <div>
+                <h1>
+                    <i class="bi bi-diagram-2"></i>
+                    Choices do Nó
+                </h1>
+                <p class="text-muted mb-0">
+                    Gerencie as opções que partem do nó <strong>@node?.Key</strong>
+                </p>
+            </div>
+            <div class="gb-node-meta">
+                <span class="badge bg-dark bg-opacity-75">
+                    <i class="bi bi-hash"></i>
+                    ID: @node?.Id
+                </span>
+                <span class="badge bg-primary bg-opacity-75">
+                    <i class="bi bi-key"></i>
+                    @node?.Key
+                </span>
+                <span class="badge bg-success bg-opacity-75">
+                    <i class="bi bi-collection"></i>
+                    @choices.Count Choice(s)
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CONTENT -->
+<div class="container-xxl">
+    <div class="gb-choices-content">
+        @if (!choices.Any())
         {
-            <tr>
-                <td>@c.Id</td>
-                <td>@c.Label</td>
-                <td><code>@c.ToNodeKey</code></td>
-                <td class="text-end">
-                    <a class="btn btn-sm btn-outline-secondary"
-                       asp-area="Admin" asp-controller="Choices" asp-action="Edit" asp-route-id="@c.Id">Editar</a>
-                    <a class="btn btn-sm btn-outline-danger"
-                       asp-area="Admin" asp-controller="Choices" asp-action="Delete" asp-route-id="@c.Id">Excluir</a>
-                </td>
-            </tr>
+            <div class="gb-empty-state">
+                <div class="gb-empty-icon">
+                    <i class="bi bi-signpost-split"></i>
+                </div>
+                <h3>Nenhuma Choice cadastrada</h3>
+                <p>Crie a primeira opção para direcionar o leitor a um novo nó.</p>
+                <a class="btn btn-primary btn-lg mt-3"
+                   asp-area="Admin" asp-controller="Choices" asp-action="Create"
+                   asp-route-fromNodeId="@node!.Id">
+                    <i class="bi bi-plus-circle"></i>
+                    Adicionar Choice
+                </a>
+            </div>
         }
-    </tbody>
-</table>
+        else
+        {
+            <div class="gb-table-card">
+                <div class="gb-table-header">
+                    <div class="gb-table-title">
+                        <i class="bi bi-list-check"></i>
+                        Choices vinculadas (@choices.Count)
+                    </div>
+                    <div>
+                        <a class="btn btn-primary btn-sm"
+                           asp-area="Admin" asp-controller="Choices" asp-action="Create"
+                           asp-route-fromNodeId="@node!.Id">
+                            <i class="bi bi-plus-circle"></i>
+                            Nova Choice
+                        </a>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="gb-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">
+                                    <i class="bi bi-hash"></i>
+                                    ID
+                                </th>
+                                <th>
+                                    <i class="bi bi-chat-square-text"></i>
+                                    Label
+                                </th>
+                                <th>
+                                    <i class="bi bi-diagram-3"></i>
+                                    Destino
+                                </th>
+                                <th class="text-end" style="width: 250px;">
+                                    <i class="bi bi-gear"></i>
+                                    Ações
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in choices)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-secondary">@c.Id</span>
+                                    </td>
+                                    <td>
+                                        <div class="gb-choice-label">
+                                            <strong>@c.Label</strong>
+                                            <small class="text-muted d-block">Texto exibido ao leitor</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <code class="gb-code">@c.ToNodeKey</code>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="gb-row-actions">
+                                            <a class="btn btn-action btn-action-edit"
+                                               asp-area="Admin" asp-controller="Choices" asp-action="Edit" asp-route-id="@c.Id"
+                                               title="Editar Choice">
+                                                <i class="bi bi-pencil"></i>
+                                                <span>Editar</span>
+                                            </a>
+                                            <a class="btn btn-action btn-action-delete"
+                                               asp-area="Admin" asp-controller="Choices" asp-action="Delete" asp-route-id="@c.Id"
+                                               title="Excluir Choice">
+                                                <i class="bi bi-trash"></i>
+                                                <span>Excluir</span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="gb-table-footer">
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle"></i>
+                        Edite ou exclua uma choice para reorganizar os caminhos da história.
+                    </small>
+                </div>
+            </div>
+        }
+    </div>
+</div>

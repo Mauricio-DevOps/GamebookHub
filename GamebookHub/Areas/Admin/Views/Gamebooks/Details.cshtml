@@ -2,67 +2,200 @@
 @using GamebookHub.Models
 @using System.Linq
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalhes do Gamebook";
 }
 
-<h1>Details</h1>
+@section Scripts {
+    <link rel="stylesheet" href="~/css/admin-gamebook-details.css" />
+}
 
-<div>
-    <h4>Gamebook</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Title)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(m => m.Title)</dd>
+<!-- PAGE HEADER -->
+<div class="gb-details-header">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="gb-header-icon">
+                        <i class="bi bi-book-half"></i>
+                    </div>
+                    <div>
+                        <h1 class="mb-1">@Html.DisplayFor(m => m.Title)</h1>
+                        <p class="text-muted mb-0">
+                            <i class="bi bi-clock-history"></i>
+                            Atualizado em @Html.DisplayFor(m => m.PublishedAt, "{0:dd/MM/yyyy HH:mm}")
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <span class="badge @(Model.IsPublished ? "bg-success" : "bg-warning")">
+                    @(Model.IsPublished ? "Publicado" : "Rascunho")
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Slug)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(m => m.Slug)</dd>
+<!-- SECTION 1: INFORMAÇÕES GERAIS -->
+<div class="gb-section">
+    <div class="gb-section-header">
+        <h2>
+            <span class="gb-section-number">1</span>
+            Informações Gerais
+        </h2>
+    </div>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Description)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(m => m.Description)</dd>
+    <div class="row g-4">
+        <!-- TÍTULO -->
+        <div class="col-lg-6">
+            <div class="gb-field-box">
+                <label class="gb-field-label">
+                    <i class="bi bi-type"></i>
+                    Título
+                </label>
+                <p class="gb-field-value">@Html.DisplayFor(m => m.Title)</p>
+            </div>
+        </div>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.CoverUrl)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(m => m.CoverUrl)</dd>
+        <!-- SLUG -->
+        <div class="col-lg-6">
+            <div class="gb-field-box">
+                <label class="gb-field-label">
+                    <i class="bi bi-link"></i>
+                    Slug
+                </label>
+                <p class="gb-field-value font-monospace">@Html.DisplayFor(m => m.Slug)</p>
+            </div>
+        </div>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.AuthorId)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(m => m.AuthorId)</dd>
+        <!-- DESCRIÇÃO -->
+        <div class="col-12">
+            <div class="gb-field-box">
+                <label class="gb-field-label">
+                    <i class="bi bi-chat-left-text"></i>
+                    Descrição
+                </label>
+                <p class="gb-field-value">@Html.DisplayFor(m => m.Description)</p>
+            </div>
+        </div>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.PublishedAt)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(m => m.PublishedAt)</dd>
+        <!-- COVER URL -->
+        <div class="col-lg-6">
+            <div class="gb-field-box">
+                <label class="gb-field-label">
+                    <i class="bi bi-image"></i>
+                    URL da Capa
+                </label>
+                <p class="gb-field-value text-break">
+                    @if (string.IsNullOrEmpty(Model.CoverUrl))
+                    {
+                        <span class="text-muted">Não informada</span>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(m => m.CoverUrl)
+                    }
+                </p>
+            </div>
+        </div>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.IsPublished)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(m => m.IsPublished)</dd>
-    </dl>
+        <!-- AUTOR -->
+        <div class="col-lg-6">
+            <div class="gb-field-box">
+                <label class="gb-field-label">
+                    <i class="bi bi-person"></i>
+                    Autor
+                </label>
+                <p class="gb-field-value">@Html.DisplayFor(m => m.AuthorId)</p>
+            </div>
+        </div>
+    </div>
 </div>
 
 @if (Model?.CharacterSheet != null)
 {
-    <div class="mt-4">
-        <h4>Ficha do Personagem</h4>
-        <hr />
-        <dl class="row">
-            <dt class="col-sm-2">Tem ficha?</dt>
-            <dd class="col-sm-10">@(Model.CharacterSheet.Enabled ? "Sim" : "Não")</dd>
+    <!-- SECTION 2: FICHA DE PERSONAGEM -->
+    <div class="gb-section">
+        <div class="gb-section-header">
+            <h2>
+                <span class="gb-section-number">2</span>
+                Ficha de Personagem
+            </h2>
+        </div>
 
-            <dt class="col-sm-2">Inventário habilitado?</dt>
-            <dd class="col-sm-10">@((Model.CharacterSheet.Inventory?.Enabled ?? false) ? "Sim" : "Não")</dd>
+        <div class="row g-4">
+            <!-- STATUS DA FICHA -->
+            <div class="col-lg-4">
+                <div class="gb-field-box">
+                    <label class="gb-field-label">
+                        <i class="bi bi-person-badge"></i>
+                        Status
+                    </label>
+                    <p class="gb-field-value">
+                        <span class="badge @(Model.CharacterSheet.Enabled ? "bg-success" : "bg-secondary")">
+                            @(Model.CharacterSheet.Enabled ? "Habilitada" : "Desabilitada")
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- STATUS DO INVENTÁRIO -->
+            <div class="col-lg-4">
+                <div class="gb-field-box">
+                    <label class="gb-field-label">
+                        <i class="bi bi-bag"></i>
+                        Inventário
+                    </label>
+                    <p class="gb-field-value">
+                        <span class="badge @((Model.CharacterSheet.Inventory?.Enabled ?? false) ? "bg-success" : "bg-secondary")">
+                            @((Model.CharacterSheet.Inventory?.Enabled ?? false) ? "Habilitado" : "Desabilitado")
+                        </span>
+                    </p>
+                </div>
+            </div>
 
             @if (Model.CharacterSheet.Inventory?.Enabled == true)
             {
-                <dt class="col-sm-2">Modo</dt>
-                <dd class="col-sm-10">@Model.CharacterSheet.Inventory.Mode</dd>
+                <!-- MODO DO INVENTÁRIO -->
+                <div class="col-lg-4">
+                    <div class="gb-field-box">
+                        <label class="gb-field-label">
+                            <i class="bi bi-sliders"></i>
+                            Modo
+                        </label>
+                        <p class="gb-field-value">
+                            <span class="badge bg-info">@Model.CharacterSheet.Inventory.Mode</span>
+                        </p>
+                    </div>
+                </div>
 
+                <!-- SLOTS ou CAPACIDADE -->
                 @if (Model.CharacterSheet.Inventory.Mode == InventoryMode.Slots)
                 {
-                    <dt class="col-sm-2">Slots</dt>
-                    <dd class="col-sm-10">@Model.CharacterSheet.Inventory.Slots</dd>
+                    <div class="col-lg-4">
+                        <div class="gb-field-box">
+                            <label class="gb-field-label">
+                                <i class="bi bi-grid-3x3-gap"></i>
+                                Total de Slots
+                            </label>
+                            <p class="gb-field-value">@Model.CharacterSheet.Inventory.Slots</p>
+                        </div>
+                    </div>
                 }
                 else if (Model.CharacterSheet.Inventory.Mode == InventoryMode.Weight)
                 {
-                    <dt class="col-sm-2">Capacidade</dt>
-                    <dd class="col-sm-10">@Model.CharacterSheet.Inventory.Capacity</dd>
+                    <div class="col-lg-4">
+                        <div class="gb-field-box">
+                            <label class="gb-field-label">
+                                <i class="bi bi-scale"></i>
+                                Capacidade
+                            </label>
+                            <p class="gb-field-value">@Model.CharacterSheet.Inventory.Capacity</p>
+                        </div>
+                    </div>
                 }
             }
-        </dl>
+        </div>
 
         @{
             var attrs = (Model?.CharacterSheet?.Attributes ?? new List<AttributeDefinition>())
@@ -70,51 +203,98 @@
             .ToList();
         }
 
+        <!-- ATRIBUTOS DA FICHA -->
         @if (attrs.Count > 0)
         {
-            <div class="table-responsive">
-                <table class="table table-sm table-striped align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th style="width:70px;">Ordem</th>
-                            <th style="width:140px;">Key</th>
-                            <th style="width:180px;">Label</th>
-                            <th style="width:110px;">Tipo</th>
-                            <th style="width:90px;">Min</th>
-                            <th style="width:90px;">Max</th>
-                            <th style="width:110px;">Default</th>
-                            <th>Enum Options</th>
-                            <th style="width:90px;">Visível</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var a in attrs)
-                        {
+            <div class="gb-attributes-section mt-4">
+                <h5 class="mb-3">
+                    <i class="bi bi-lightning-fill"></i>
+                    Atributos (@attrs.Count)
+                </h5>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="gb-table-header">
                             <tr>
-                                <td>@a.Order</td>
-                                <td><code>@a.Key</code></td>
-                                <td>@a.Label</td>
-                                <td>@a.Type</td>
-                                <td>@a.Min</td>
-                                <td>@a.Max</td>
-                                <td>@a.Default</td>
-                                <td>@a.EnumOptions</td>
-                                <td>@(a.Visible ? "Sim" : "Não")</td>
+                                <th style="width:50px;">
+                                    <i class="bi bi-sort-down"></i>
+                                </th>
+                                <th style="width:100px;">Key</th>
+                                <th style="width:150px;">Label</th>
+                                <th style="width:100px;">Tipo</th>
+                                <th style="width:60px;">Min</th>
+                                <th style="width:60px;">Max</th>
+                                <th style="width:80px;">Padrão</th>
+                                <th>Opções</th>
+                                <th style="width:60px;">
+                                    <i class="bi bi-eye"></i>
+                                </th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var a in attrs)
+                            {
+                                <tr class="gb-table-row">
+                                    <td>
+                                        <span class="badge bg-secondary">@a.Order</span>
+                                    </td>
+                                    <td><code class="gb-code">@a.Key</code></td>
+                                    <td>
+                                        <strong>@a.Label</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark">@a.Type</span>
+                                    </td>
+                                    <td>@(a.Min?.ToString() ?? "-")</td>
+                                    <td>@(a.Max?.ToString() ?? "-")</td>
+                                    <td>@(a.Default?.ToString() ?? "-")</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(a.EnumOptions))
+                                        {
+                                            <small class="text-muted">@a.EnumOptions</small>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        @if (a.Visible)
+                                        {
+                                            <i class="bi bi-eye-fill text-success"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-eye-slash text-muted"></i>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         }
         else
         {
-            <p class="text-muted mb-0">Nenhum atributo definido.</p>
+            <div class="alert alert-info mb-0 mt-3">
+                <i class="bi bi-info-circle"></i>
+                Nenhum atributo definido para esta ficha.
+            </div>
         }
-
     </div>
 }
 
-<div class="mt-4">
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<!-- ACTION BUTTONS -->
+<div class="gb-actions mt-5">
+    <div class="d-flex gap-2 flex-wrap">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">
+            <i class="bi bi-pencil"></i>
+            Editar
+        </a>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i>
+            Voltar para Lista
+        </a>
+    </div>
 </div>

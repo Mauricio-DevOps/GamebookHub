@@ -1,179 +1,279 @@
 ﻿@model GamebookHub.Models.Gamebook
 @using GamebookHub.Models
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Criar Novo Livro-Jogo";
     var existingAttrCount = Model?.CharacterSheet?.Attributes?.Count ?? 0;
 }
 
-<h1>Create</h1>
-<h4>Gamebook</h4>
-<hr />
-<div class="row">
-    <div class="col-md-8">
-        <form asp-action="Create">
-            <div asp-validation-summary="All" class="text-danger"></div>
+<div class="gamebook-create-wrapper">
+    <!-- Page Header -->
+    <div class="create-page-header">
+        <div class="header-content">
+            <h1 class="page-title">
+                <i class="bi bi-book-fill"></i> Criar Novo Livro-Jogo
+            </h1>
+            <p class="page-subtitle">Configure os detalhes e características do seu novo livro-jogo interativo</p>
+        </div>
+    </div>
 
-            <!-- Metadados básicos (mantidos) -->
-            <div class="form-group mb-3">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label asp-for="Slug" class="control-label"></label>
-                <input asp-for="Slug" class="form-control" />
-                <span asp-validation-for="Slug" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label asp-for="CoverUrl" class="control-label"></label>
-                <input asp-for="CoverUrl" class="form-control" />
-                <span asp-validation-for="CoverUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label asp-for="AuthorId" class="control-label"></label>
-                <input asp-for="AuthorId" class="form-control" />
-                <span asp-validation-for="AuthorId" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label asp-for="PublishedAt" class="control-label"></label>
-                <input asp-for="PublishedAt" class="form-control" type="datetime-local" />
-                <span asp-validation-for="PublishedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check mb-4">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsPublished" /> @Html.DisplayNameFor(model => model.IsPublished)
-                </label>
-            </div>
-
-            <!-- ============================  Ficha do Personagem  ============================ -->
-            <div class="card mb-4">
-                <div class="card-header">Ficha do Personagem</div>
-                <div class="card-body">
-                    <!-- Toggle principal -->
-                    <div class="form-check form-switch mb-3">
-                        <input class="form-check-input"
-                               type="checkbox"
-                               id="cs-enabled"
-                               name="CharacterSheet.Enabled"
-                               value="true"
-                               @(Model?.CharacterSheet?.Enabled == true ? "checked" : "") />
-                        <input type="hidden" name="CharacterSheet.Enabled" value="false" />
-
-                        <label class="form-check-label" for="cs-enabled">Tem ficha?</label>
+    <div class="container-lg">
+        <div class="row">
+            <div class="col-lg-9">
+                <form asp-action="Create" class="gamebook-form">
+                    <!-- Validation Summary -->
+                    <div asp-validation-summary="All" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;" id="validationAlert">
+                        <strong><i class="bi bi-exclamation-triangle-fill"></i> Erros encontrados:</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
 
-
-                    <div id="cs-block" style="display:@((Model?.CharacterSheet?.Enabled ?? false) ? "block" : "none")">
-                        <!-- Atributos -->
-                        <h5 class="mt-2">Atributos</h5>
-                        <p class="text-muted">Defina atributos genéricos (ex.: Força, Defesa, Inteligência, HP...).</p>
-
-                        <div id="attributes-list">
-                            @if (Model?.CharacterSheet?.Attributes != null && Model.CharacterSheet.Attributes.Count > 0)
-                            {
-                                @for (var i = 0; i < Model.CharacterSheet.Attributes.Count; i++)
-                                {
-                                    var prefix = $"CharacterSheet.Attributes[{i}]";
-                                    <div class="border rounded p-3 mb-3 attribute-item" data-index="@i">
-                                        <!-- mantém estes dois -->
-                                        <input type="hidden" name="CharacterSheet.Attributes.Index" value="@i" />
-                                        <input type="hidden" name="@($"{prefix}.Id")" value="@Model.CharacterSheet.Attributes[i].Id" />
-
-                                        <div class="row g-3">
-                                            <!-- ... seus campos Label/Key/Tipo/Min/Max/Default/EnumOptions ... -->
-
-                                            <div class="col-md-3 d-flex align-items-end">
-                                                <div class="form-check">
-                                                    <!-- checkbox PRIMEIRO -->
-                                                    <input class="form-check-input"
-                                                           type="checkbox"
-                                                           name="@($"{prefix}.Visible")"
-                                                           value="true"
-                                                           @(Model.CharacterSheet.Attributes[i].Visible ? "checked" : "") />
-                                                    <!-- hidden DEPOIS -->
-                                                    <input type="hidden" name="@($"{prefix}.Visible")" value="false" />
-                                                    <label class="form-check-label">Visível</label>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-3">
-                                                <label class="form-label">Ordem</label>
-                                                <input class="form-control" type="number" name="@($"{prefix}.Order")" value="@Model.CharacterSheet.Attributes[i].Order" />
-                                            </div>
-                                        </div>
-
-                                        <div class="mt-3 text-end">
-                                            <button type="button" class="btn btn-outline-danger btn-sm remove-attribute">Remover</button>
-                                        </div>
-                                    </div>
-                                }
-
-
-                            }
-                        </div>
-
-                        <button type="button" class="btn btn-outline-primary" id="add-attribute">Adicionar atributo</button>
-
-                        <hr class="my-4" />
-
-                        <!-- Inventário -->
-                        <h5>Inventário</h5>
-                        <div class="form-check form-switch mb-3">
-                            <input class="form-check-input"
-                                   type="checkbox"
-                                   id="inv-enabled"
-                                   name="CharacterSheet.Inventory.Enabled"
-                                   value="true"
-                                   @(Model?.CharacterSheet?.Inventory?.Enabled == true ? "checked" : "") />
-                            <input type="hidden" name="CharacterSheet.Inventory.Enabled" value="false" />
-                            <label class="form-check-label" for="inv-enabled">Usa inventário?</label>
-                        </div>
-
-                        <div id="inv-block" style="display:@((Model?.CharacterSheet?.Inventory?.Enabled ?? false) ? "block" : "none")">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Modo</label>
-                                    <select class="form-select" id="inv-mode" name="CharacterSheet.Inventory.Mode">
-                                        @{
-                                            var mode = Model?.CharacterSheet?.Inventory?.Mode.ToString() ?? "Unlimited";
-                                        }
-                                        <option value="Unlimited" selected="@(mode == "Unlimited")">Ilimitado</option>
-                                        <option value="Slots" selected="@(mode == "Slots")">Por slots</option>
-                                        <option value="Weight" selected="@(mode == "Weight")">Por peso/volume</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-3 inv-field inv-slots" style="display:@((Model?.CharacterSheet?.Inventory?.Mode == InventoryMode.Slots) ? "block" : "none")">
-                                    <label class="form-label">Slots</label>
-                                    <input class="form-control" type="number" min="1" name="CharacterSheet.Inventory.Slots" value="@(Model?.CharacterSheet?.Inventory?.Slots)" />
-                                </div>
-
-                                <div class="col-md-3 inv-field inv-capacity" style="display:@((Model?.CharacterSheet?.Inventory?.Mode == InventoryMode.Weight) ? "block" : "none")">
-                                    <label class="form-label">Capacidade</label>
-                                    <input class="form-control" type="number" step="0.01" min="0" name="CharacterSheet.Inventory.Capacity" value="@(Model?.CharacterSheet?.Inventory?.Capacity)" />
-                                </div>
+                    <!-- SEÇÃO 1: Informações Básicas -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <div class="section-number">1</div>
+                            <div class="section-title-content">
+                                <h2>Informações Básicas</h2>
+                                <p>Dados essenciais do livro-jogo</p>
                             </div>
                         </div>
 
-                    </div>
-                </div>
-            </div>
-            <!-- ============================  /Ficha do Personagem  ============================ -->
+                        <div class="section-body">
+                            <!-- Título -->
+                            <div class="form-group mb-4">
+                                <label asp-for="Title" class="form-label fw-semibold">
+                                    <i class="bi bi-pencil-square"></i> Título
+                                </label>
+                                <input asp-for="Title" class="form-control form-control-lg" placeholder="Digite o título do livro-jogo" />
+                                <small class="form-text">O título é a primeira coisa que os jogadores verão</small>
+                                <span asp-validation-for="Title" class="text-danger small d-block mt-1"></span>
+                            </div>
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-link">Back to List</a>
+                            <!-- Slug -->
+                            <div class="form-group mb-4">
+                                <label asp-for="Slug" class="form-label fw-semibold">
+                                    <i class="bi bi-link-45deg"></i> Slug (URL Amigável)
+                                </label>
+                                <input asp-for="Slug" class="form-control" placeholder="ex-o-titulo-em-slug" />
+                                <small class="form-text">Usado na URL para acessar o livro-jogo. Use letras, números e hífens.</small>
+                                <span asp-validation-for="Slug" class="text-danger small d-block mt-1"></span>
+                            </div>
+
+                            <!-- Descrição -->
+                            <div class="form-group mb-4">
+                                <label asp-for="Description" class="form-label fw-semibold">
+                                    <i class="bi bi-file-text"></i> Descrição
+                                </label>
+                                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Descreva a história, o enredo e o que torna seu livro-jogo especial..."></textarea>
+                                <small class="form-text">Máximo 500 caracteres. Use para atrair e descrever o conteúdo.</small>
+                                <span asp-validation-for="Description" class="text-danger small d-block mt-1"></span>
+                            </div>
+
+                            <div class="row">
+                                <!-- Cover URL -->
+                                <div class="col-md-6">
+                                    <div class="form-group mb-4">
+                                        <label asp-for="CoverUrl" class="form-label fw-semibold">
+                                            <i class="bi bi-image"></i> URL da Capa
+                                        </label>
+                                        <input asp-for="CoverUrl" class="form-control" placeholder="https://exemplo.com/capa.jpg" />
+                                        <small class="form-text">Link da imagem que será usada como capa do livro</small>
+                                        <span asp-validation-for="CoverUrl" class="text-danger small d-block mt-1"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Author ID -->
+                                <div class="col-md-6">
+                                    <div class="form-group mb-4">
+                                        <label asp-for="AuthorId" class="form-label fw-semibold">
+                                            <i class="bi bi-person-circle"></i> ID do Autor
+                                        </label>
+                                        <input asp-for="AuthorId" class="form-control" placeholder="Seu ID de autor" />
+                                        <small class="form-text">Identificador do autor do livro-jogo</small>
+                                        <span asp-validation-for="AuthorId" class="text-danger small d-block mt-1"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Publicado Em -->
+                                <div class="col-md-6">
+                                    <div class="form-group mb-4">
+                                        <label asp-for="PublishedAt" class="form-label fw-semibold">
+                                            <i class="bi bi-calendar-event"></i> Data de Publicação
+                                        </label>
+                                        <input asp-for="PublishedAt" class="form-control" type="datetime-local" />
+                                        <small class="form-text">Data e hora de publicação</small>
+                                        <span asp-validation-for="PublishedAt" class="text-danger small d-block mt-1"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Is Published -->
+                                <div class="col-md-6">
+                                    <div class="form-group mb-4">
+                                        <label class="form-label fw-semibold d-block">
+                                            <i class="bi bi-star-fill"></i> Status
+                                        </label>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" asp-for="IsPublished" id="isPublishedCheck" />
+                                            <label class="form-check-label" for="isPublishedCheck">
+                                                Marcar como publicado
+                                            </label>
+                                        </div>
+                                        <small class="form-text">Publicados são visíveis para os jogadores</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEÇÃO 2: Ficha do Personagem -->
+                    <div class="form-section mt-5">
+                        <div class="section-header">
+                            <div class="section-number">2</div>
+                            <div class="section-title-content">
+                                <h2>Ficha do Personagem</h2>
+                                <p>Defina atributos e inventário (opcional)</p>
+                            </div>
+                        </div>
+
+                        <div class="section-body">
+                            <!-- Toggle Ficha -->
+                            <div class="feature-toggle mb-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="cs-enabled" 
+                                           name="CharacterSheet.Enabled" value="true"
+                                           @(Model?.CharacterSheet?.Enabled == true ? "checked" : "") />
+                                    <input type="hidden" name="CharacterSheet.Enabled" value="false" />
+                                    <label class="form-check-label fw-semibold" for="cs-enabled">
+                                        <i class="bi bi-person-badge"></i> Ativar Sistema de Ficha de Personagem
+                                    </label>
+                                </div>
+                                <p class="toggle-help">Permite que os jogadores criem e gerenciem fichas de personagens</p>
+                            </div>
+
+                            <!-- Conteúdo da Ficha (oculto até ativar) -->
+                            <div id="cs-block" style="display:@((Model?.CharacterSheet?.Enabled ?? false) ? "block" : "none")">
+                                <!-- Subsecção: Atributos -->
+                                <div class="subsection mb-5">
+                                    <h3 class="subsection-title">
+                                        <i class="bi bi-lightning-fill"></i> Atributos do Personagem
+                                    </h3>
+                                    <p class="subsection-help">Defina os atributos que os personagens terão (ex: Força, Inteligência, HP, Defesa)</p>
+
+                                    <div id="attributes-list" class="attributes-container">
+                                        @if (Model?.CharacterSheet?.Attributes != null && Model.CharacterSheet.Attributes.Count > 0)
+                                        {
+                                            @for (var i = 0; i < Model.CharacterSheet.Attributes.Count; i++)
+                                            {
+                                                var prefix = $"CharacterSheet.Attributes[{i}]";
+                                                <div class="attribute-card mb-3" data-index="@i">
+                                                    <input type="hidden" name="CharacterSheet.Attributes.Index" value="@i" />
+                                                    <input type="hidden" name="@($"{prefix}.Id")" value="@Model.CharacterSheet.Attributes[i].Id" />
+
+                                                    <div class="row g-2 align-items-end">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label small">Atributo</label>
+                                                            <div class="placeholder-text">Campo será preenchido</div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="form-label small">Ordem</label>
+                                                            <input class="form-control" type="number" name="@($"{prefix}.Order")" value="@Model.CharacterSheet.Attributes[i].Order" />
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" id="visible-@i"
+                                                                       name="@($"{prefix}.Visible")" value="true"
+                                                                       @(Model.CharacterSheet.Attributes[i].Visible ? "checked" : "") />
+                                                                <input type="hidden" name="@($"{prefix}.Visible")" value="false" />
+                                                                <label class="form-check-label" for="visible-@i">Visível</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2 text-end">
+                                                            <button type="button" class="btn btn-sm btn-danger-outline remove-attribute" title="Remover">
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+
+                                    <button type="button" class="btn btn-outline-success btn-sm" id="add-attribute">
+                                        <i class="bi bi-plus-circle"></i> Adicionar Atributo
+                                    </button>
+                                </div>
+
+                                <hr class="my-4" />
+
+                                <!-- Subsecção: Inventário -->
+                                <div class="subsection">
+                                    <h3 class="subsection-title">
+                                        <i class="bi bi-backpack"></i> Sistema de Inventário
+                                    </h3>
+
+                                    <div class="feature-toggle mb-4">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="inv-enabled"
+                                                   name="CharacterSheet.Inventory.Enabled" value="true"
+                                                   @(Model?.CharacterSheet?.Inventory?.Enabled == true ? "checked" : "") />
+                                            <input type="hidden" name="CharacterSheet.Inventory.Enabled" value="false" />
+                                            <label class="form-check-label fw-semibold" for="inv-enabled">
+                                                <i class="bi bi-bag"></i> Ativar Inventário
+                                            </label>
+                                        </div>
+                                        <p class="toggle-help">Permite que personagens carreguem e gerenciem itens</p>
+                                    </div>
+
+                                    <div id="inv-block" style="display:@((Model?.CharacterSheet?.Inventory?.Enabled ?? false) ? "block" : "none")">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">Tipo de Inventário</label>
+                                                <select class="form-select" id="inv-mode" name="CharacterSheet.Inventory.Mode">
+                                                    @{
+                                                        var mode = Model?.CharacterSheet?.Inventory?.Mode.ToString() ?? "Unlimited";
+                                                    }
+                                                    <option value="Unlimited" selected="@(mode == "Unlimited")">Ilimitado</option>
+                                                    <option value="Slots" selected="@(mode == "Slots")">Por Slots</option>
+                                                    <option value="Weight" selected="@(mode == "Weight")">Por Peso/Volume</option>
+                                                </select>
+                                                <small class="form-text">Escolha como o inventário será gerenciado</small>
+                                            </div>
+
+                                            <div class="col-md-6 inv-field inv-slots" style="display:@((Model?.CharacterSheet?.Inventory?.Mode == InventoryMode.Slots) ? "block" : "none")">
+                                                <label class="form-label fw-semibold">Número de Slots</label>
+                                                <input class="form-control" type="number" min="1" name="CharacterSheet.Inventory.Slots" value="@(Model?.CharacterSheet?.Inventory?.Slots ?? 10)" />
+                                                <small class="form-text">Quantos itens podem ser carregados simultaneamente</small>
+                                            </div>
+
+                                            <div class="col-md-6 inv-field inv-capacity" style="display:@((Model?.CharacterSheet?.Inventory?.Mode == InventoryMode.Weight) ? "block" : "none")">
+                                                <label class="form-label fw-semibold">Capacidade Máxima</label>
+                                                <input class="form-control" type="number" step="0.01" min="0" name="CharacterSheet.Inventory.Capacity" value="@(Model?.CharacterSheet?.Inventory?.Capacity ?? 50)" />
+                                                <small class="form-text">Peso ou volume máximo permitido</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEÇÃO 3: Ações -->
+                    <div class="form-actions mt-5">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-check-circle"></i> Criar Livro-Jogo
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-arrow-left"></i> Voltar para Lista
+                        </a>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <link rel="stylesheet" href="~/css/gamebook-create-form.css" asp-append-version="true" />
     <script src="~/js/gamebook-create.js" asp-append-version="true"></script>
 }

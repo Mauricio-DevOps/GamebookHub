@@ -1,39 +1,61 @@
-﻿/* ----- Container centralizado ocupando a tela ----- */
+﻿/* ----- HERO HEADER ----- */
+.lib-hero {
+    background: linear-gradient(135deg, #7e46e4 0%, #a45de6 100%);
+    color: #fff;
+    padding: 36px 24px;
+    margin-bottom: 40px;
+}
+
+.lib-hero-content {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* ----- Container centralizado ocupando a tela ----- */
 .lib-container {
     /* ocupa a largura visível e centraliza */
     width: min(96vw, 1600px);
     margin: 0 auto;
-    padding: 24px 16px;
+    padding: 0 16px 24px;
 }
 
-/* título e barra de busca centralizados */
+/* título centralizado */
 .lib-title {
     margin: 0 0 12px;
-    font-size: 2.25rem;
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
     font-weight: 700;
     text-align: center;
 }
 
+.lib-subtitle {
+    margin: 0 0 24px;
+    font-size: 0.95rem;
+    text-align: center;
+    opacity: 0.95;
+}
+
+/* barra de busca melhorada */
 .lib-search {
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: 8px;
-    max-width: 900px; /* não deixa a busca ficar larga demais */
-    margin: 0 auto 20px;
+    gap: 12px;
+    max-width: 700px; /* um pouco menor para melhor proporção */
+    margin: 0 auto;
 }
 
 /* ----- Grid que preenche a largura ----- */
 .lib-grid {
     display: grid;
-    /* cria o máximo de colunas possíveis, mantendo legibilidade */
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 20px;
+    /* cria mais colunas com tamanho mínimo reduzido */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
     align-items: stretch;
 }
 
 /* ----- Cartões ----- */
 .lib-thumb {
-    height: 260px;
+    height: 200px;
     object-fit: cover;
     object-position: center;
     border-top-left-radius: .5rem;
@@ -60,26 +82,28 @@
     overflow: hidden;
 }
 
+/* ----- MEDIA QUERIES ATUALIZADAS ----- */
+
 /* mais presença visual em telas muito grandes */
-@media (min-width: 1600px) {
+@@media (min-width: 1600px) {
     .lib-grid {
-        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     }
 
     .lib-thumb {
-        height: 280px;
+        height: 220px;
     }
 }
 
 /* ajuste para tablets */
-@media (max-width: 992px) {
+@@media (max-width: 992px) {
     .lib-thumb {
-        height: 240px;
+        height: 190px;
     }
 }
 
-/* mobile: 1–2 colunas, tudo ainda centralizado */
-@media (max-width: 576px) {
+/* mobile: 2–3 colunas, tudo ainda centralizado */
+@@media (max-width: 576px) {
     .lib-container {
         width: 100vw;
         padding-left: 12px;
@@ -87,6 +111,11 @@
     }
 
     .lib-grid {
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+    }
+
+    .lib-thumb {
+        height: 160px;
     }
 }

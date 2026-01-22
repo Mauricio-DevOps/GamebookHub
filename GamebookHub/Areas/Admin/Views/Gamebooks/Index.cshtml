@@ -1,115 +1,169 @@
 ﻿@model IEnumerable<GamebookHub.Models.Gamebook>
 @{
     ViewData["Title"] = "Gamebooks";
+    Layout = "/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/admin-gamebooks.css" asp-append-version="true" />
-
+    <link rel="stylesheet" href="~/css/admin-gamebooks-index.css" asp-append-version="true" />
 }
 
 @section Subnav {
     <div class="admin-subnav">
         <div class="container-xxl">
-            <a class="btn btn-outline-light" asp-area="Admin" asp-controller="Home" asp-action="Index">Dashboard</a>
-            <a class="btn btn-outline-light active" asp-area="Admin" asp-controller="Gamebooks" asp-action="Index">Gamebooks</a>
-            @* adicione outras abas do Admin aqui *@
+            <a class="btn btn-outline-light active" asp-area="Admin" asp-controller="Gamebooks" asp-action="Index">
+                <i class="bi bi-book"></i>
+                Gamebooks
+            </a>
         </div>
     </div>
 }
 
-@{
-    Layout = "/Areas/Admin/Views/Shared/_Layout.cshtml";
-}
-
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-
-<!-- CSS base -->
-<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
-
-<div class="gb-wrap">
-    <div class="gb-head">
-        <div>
-            <h1 class="gb-title">Gamebooks</h1>
-            @if (TempData["ok"] is string okMsg)
-            {
-                <div class="alert alert-success py-2 px-3 my-2">@okMsg</div>
-            }
-        </div>
-        <div class="d-flex gap-2">
-            <a class="btn btn-primary"
-               asp-area="Admin" asp-controller="Gamebooks" asp-action="Create">
-                Criar novo
-            </a>
-            <a class="btn btn-outline-secondary"
-               asp-area="Admin" asp-controller="Gamebooks" asp-action="Import">
-                Importar JSON
-            </a>
+<!-- PAGE HEADER -->
+<div class="gb-list-header">
+    <div class="container-xxl">
+        <div class="gb-header-content">
+            <div>
+                <h1 class="mb-2">
+                    <i class="bi bi-book-half"></i>
+                    Gamebooks
+                </h1>
+                @if (TempData["ok"] is string okMsg)
+                {
+                    <div class="alert alert-success alert-dismissible fade show mb-0" role="alert">
+                        <i class="bi bi-check-circle"></i>
+                        <span>@okMsg</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <a class="btn btn-primary btn-lg"
+                   asp-area="Admin" asp-controller="Gamebooks" asp-action="Create">
+                    <i class="bi bi-plus-circle"></i>
+                    Criar Novo
+                </a>
+                <a class="btn btn-info btn-lg"
+                   asp-area="Admin" asp-controller="Gamebooks" asp-action="Import">
+                    <i class="bi bi-upload"></i>
+                    Importar JSON
+                </a>
+            </div>
         </div>
     </div>
+</div>
 
-    <div class="card gb-card">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle gb-table">
-                <thead class="table-light">
-                    <tr>
-                        <th>Título</th>
-                        <th>Autor</th>
-                        <th>Slug</th>
-                        <th>Publicado em</th>
-                        <th>Status</th>
-                        <th class="text-end">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        var isPublished = item.IsPublished;
-                        <tr>
-                            <td>
-                                <div class="gb-titlecell">
-                                    <img class="gb-thumb" src="@(item.CoverUrl ?? "/images/placeholder.png")" alt="@item.Title" loading="lazy" />
-                                    <div>
-                                        <div class="fw-semibold">@item.Title</div>
-                                        @if (!string.IsNullOrWhiteSpace(item.Description))
-                                        {
-                                            <div class="gb-meta text-truncate" style="max-width: 420px;">@item.Description</div>
-                                        }
-                                    </div>
+<!-- GAMEBOOKS LIST -->
+<div class="container-xxl">
+    <div class="gb-list-content">
+        @{
+            var gamebooks = Model.ToList();
+        }
+
+        @if (gamebooks.Count == 0)
+        {
+            <div class="gb-empty-state">
+                <div class="gb-empty-icon">
+                    <i class="bi bi-inbox"></i>
+                </div>
+                <h3>Nenhum Gamebook Encontrado</h3>
+                <p>Comece criando seu primeiro gamebook para ver aqui.</p>
+                <a class="btn btn-primary mt-3"
+                   asp-area="Admin" asp-controller="Gamebooks" asp-action="Create">
+                    <i class="bi bi-plus-circle"></i>
+                    Criar Primeiro Gamebook
+                </a>
+            </div>
+        }
+        else
+        {
+            <!-- LIST VIEW -->
+            <div class="gb-list">
+                @foreach (var item in gamebooks)
+                {
+                    var isPublished = item.IsPublished;
+                    <div class="gb-list-item">
+                        <!-- COVER IMAGE -->
+                        <div class="gb-item-cover">
+                            <img src="@(item.CoverUrl ?? "/images/placeholder.png")" 
+                                 alt="@item.Title" 
+                                 loading="lazy" />
+                            @if (isPublished)
+                            {
+                                <div class="gb-item-badge">
+                                    <i class="bi bi-check-circle-fill"></i>
                                 </div>
-                            </td>
-                            <td>@(item.AuthorId ?? "-")</td>
-                            <td><code>@item.Slug</code></td>
-                            <td>@(item.PublishedAt?.ToString("yyyy-MM-dd") ?? "-")</td>
-                            <td>
-                                @if (isPublished)
-                                {
-                                    <span class="badge text-white badge-published">Publicado</span>
-                                }
-                                else
-                                {
-                                    <span class="badge text-white badge-draft">Rascunho</span>
-                                }
-                            </td>
-                            <td class="text-end">
-                                <div class="gb-actions">
-                                    <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.Id">Editar</a>
-                                    <a class="btn btn-sm btn-outline-info" asp-action="Details" asp-route-id="@item.Id">Detalhes</a>
-                                    <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
-                                    <a class="btn btn-sm btn-secondary"
-                                       asp-area="Admin" asp-controller="Nodes" asp-action="Index"
-                                       asp-route-gamebookId="@item.Id">
-                                        Nós
-                                    </a>
+                            }
+                        </div>
+
+                        <!-- CONTENT -->
+                        <div class="gb-item-content">
+                            <div class="gb-item-header">
+                                <div>
+                                    <h3 class="gb-item-title">@item.Title</h3>
+                                    @if (!string.IsNullOrWhiteSpace(item.Description))
+                                    {
+                                        <p class="gb-item-description">@item.Description</p>
+                                    }
                                 </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                                <span class="badge @(isPublished ? "bg-success" : "bg-warning")">
+                                    @(isPublished ? "Publicado" : "Rascunho")
+                                </span>
+                            </div>
+
+                            <div class="gb-item-meta">
+                                <div class="gb-meta-item">
+                                    <i class="bi bi-person"></i>
+                                    <span>@(item.AuthorId ?? "Desconhecido")</span>
+                                </div>
+                                <div class="gb-meta-item">
+                                    <i class="bi bi-link"></i>
+                                    <code>@item.Slug</code>
+                                </div>
+                                <div class="gb-meta-item">
+                                    <i class="bi bi-calendar"></i>
+                                    <span>@(item.PublishedAt?.ToString("dd/MM/yyyy") ?? "-")</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ACTIONS -->
+                        <div class="gb-item-actions">
+                            <a class="btn btn-action btn-action-primary" 
+                               asp-action="Details" 
+                               asp-route-id="@item.Id"
+                               title="Ver Detalhes">
+                                <i class="bi bi-eye"></i>
+                                <span>Detalhes</span>
+                            </a>
+                            <a class="btn btn-action btn-action-secondary" 
+                               asp-action="Edit" 
+                               asp-route-id="@item.Id"
+                               title="Editar">
+                                <i class="bi bi-pencil"></i>
+                                <span>Editar</span>
+                            </a>
+                            <a class="btn btn-action btn-action-info" 
+                               asp-area="Admin" 
+                               asp-controller="Nodes" 
+                               asp-action="Index"
+                               asp-route-gamebookId="@item.Id"
+                               title="Gerenciar Nós">
+                                <i class="bi bi-diagram-3"></i>
+                                <span>Nós</span>
+                            </a>
+                            <a class="btn btn-action btn-action-danger" 
+                               asp-action="Delete" 
+                               asp-route-id="@item.Id"
+                               title="Excluir"
+                               onclick="return confirm('Tem certeza que deseja excluir este gamebook?');">
+                                <i class="bi bi-trash"></i>
+                                <span>Excluir</span>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
     </div>
 </div>

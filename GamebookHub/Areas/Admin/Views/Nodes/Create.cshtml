@@ -1,38 +1,136 @@
 ﻿@model GamebookHub.Models.GameNode
 @{
     ViewData["Title"] = "Novo Nó";
+    Layout = "/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-<h3>@ViewData["Title"]</h3>
 
-<form asp-area="Admin" asp-controller="Nodes" asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-node-form.css" asp-append-version="true" />
+}
 
-    <div asp-validation-summary="All" class="text-danger"></div>
-
-    <input type="hidden" asp-for="GamebookId" />
-
-    <div class="mb-3">
-        <label class="form-label" asp-for="Key"></label>
-        <input class="form-control" asp-for="Key" />
-        <span class="text-danger" asp-validation-for="Key"></span>
+<!-- PAGE HEADER -->
+<div class="gb-form-header">
+    <div class="container-xxl">
+        <a class="btn btn-secondary btn-sm" 
+           asp-area="Admin" asp-controller="Nodes" asp-action="Index"
+           asp-route-gamebookId="@Model.GamebookId">
+            <i class="bi bi-arrow-left"></i>
+            Voltar aos Nós
+        </a>
+        <h1 class="mt-3 mb-2">
+            <i class="bi bi-diagram-3"></i>
+            Criar Novo Nó
+        </h1>
+        <p class="text-muted mb-0">
+            Defina um ponto de decisão na sua história
+        </p>
     </div>
+</div>
 
-    <div class="mb-3">
-        <label class="form-label" asp-for="Text">Texto (Markdown)</label>
-        <textarea class="form-control" asp-for="Text" rows="6"></textarea>
-        <span class="text-danger" asp-validation-for="Text"></span>
+<div class="container-xxl">
+    <div class="gb-form-container">
+        <form asp-area="Admin" asp-controller="Nodes" asp-action="Create" method="post" class="gb-form">
+            @Html.AntiForgeryToken()
+
+            <!-- VALIDATION SUMMARY -->
+            @if (ViewData.ModelState.Any(x => x.Value.Errors.Count > 0))
+            {
+                <div class="alert alert-danger mb-4">
+                    <div class="d-flex gap-2">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <div>
+                            <strong>Erros de validação encontrados:</strong>
+                            <div asp-validation-summary="All" class="mt-2 mb-0"></div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <input type="hidden" asp-for="GamebookId" />
+
+            <!-- SECTION: INFORMAÇÕES DO NÓ -->
+            <div class="gb-form-section">
+                <div class="gb-form-section-header">
+                    <h2>
+                        <span class="gb-section-number">1</span>
+                        Informações do Nó
+                    </h2>
+                </div>
+
+                <div class="row g-3">
+                    <!-- KEY -->
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label asp-for="Key" class="form-label gb-form-label">
+                                <i class="bi bi-key"></i>
+                                @Html.DisplayNameFor(m => m.Key)
+                            </label>
+                            <input asp-for="Key" class="form-control gb-form-control" placeholder="ex: inicio, primeira_decisao, final_feliz" />
+                            <small class="form-text text-muted">Identificador único do nó (sem espaços)</small>
+                            <span asp-validation-for="Key" class="invalid-feedback d-block"></span>
+                        </div>
+                    </div>
+
+                    <!-- ENDING FLAG -->
+                    <div class="col-12">
+                        <div class="gb-toggle-group">
+                            <div class="form-check form-switch gb-form-switch">
+                                <input class="form-check-input" asp-for="IsEnding" type="checkbox" />
+                                <label class="form-check-label" asp-for="IsEnding">
+                                    <i class="bi bi-flag"></i>
+                                    Marcar como Final da História
+                                </label>
+                            </div>
+                            <p class="text-muted small">Ative se este nó representa um encerramento da narrativa (sem possibilidade de continuação)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: CONTEÚDO -->
+            <div class="gb-form-section">
+                <div class="gb-form-section-header">
+                    <h2>
+                        <span class="gb-section-number">2</span>
+                        Conteúdo
+                    </h2>
+                </div>
+
+                <div class="row g-3">
+                    <!-- TEXT -->
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="form-label gb-form-label">
+                                <i class="bi bi-chat-left-text"></i>
+                                Texto (Markdown)
+                            </label>
+                            <textarea class="form-control gb-form-control" asp-for="Text" rows="10" placeholder="Escreva o texto do nó aqui...&#10;&#10;Você pode usar **negrito**, *itálico*, # títulos, etc."></textarea>
+                            <small class="form-text text-muted">
+                                <i class="bi bi-info-circle"></i>
+                                Suporta Markdown: **negrito**, *itálico*, # títulos, - listas, etc.
+                            </small>
+                            <span asp-validation-for="Text" class="invalid-feedback d-block"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FORM ACTIONS -->
+            <div class="gb-form-actions">
+                <button class="btn btn-primary btn-lg" type="submit">
+                    <i class="bi bi-check-circle"></i>
+                    Criar Nó
+                </button>
+                <a class="btn btn-secondary btn-lg"
+                   asp-area="Admin" asp-controller="Nodes" asp-action="Index"
+                   asp-route-gamebookId="@Model.GamebookId">
+                    <i class="bi bi-arrow-left"></i>
+                    Cancelar
+                </a>
+            </div>
+        </form>
     </div>
-
-    <div class="form-check mb-3">
-        <input class="form-check-input" asp-for="IsEnding" />
-        <label class="form-check-label" asp-for="IsEnding">Final?</label>
-    </div>
-
-    <button class="btn btn-primary" type="submit">Salvar</button>
-    <a class="btn btn-secondary"
-       asp-area="Admin" asp-controller="Nodes" asp-action="Index"
-       asp-route-gamebookId="@Model.GamebookId">Voltar</a>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

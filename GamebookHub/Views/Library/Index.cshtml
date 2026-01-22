@@ -8,14 +8,19 @@
     <link rel="stylesheet" href="~/css/biblioteca.css" asp-append-version="true" />
 }
 
+<!-- HERO HEADER -->
+<div class="lib-hero">
+    <div class="lib-hero-content">
+        <h1 class="lib-title">Biblioteca</h1>
+        <p class="lib-subtitle">Explore nossa coleção de livros-jogo interativos</p>
+        <form method="get" class="lib-search">
+            <input name="q" class="form-control" placeholder="Buscar título..." value="@(ViewData["q"] as string ?? "")" />
+            <button class="btn btn-primary" type="submit">Buscar</button>
+        </form>
+    </div>
+</div>
+
 <div class="lib-container">
-    <h1 class="lib-title">Biblioteca</h1>
-
-    <form method="get" class="lib-search">
-        <input name="q" class="form-control" placeholder="Buscar título..." value="@(ViewData["q"] as string ?? "")" />
-        <button class="btn btn-primary" type="submit">Buscar</button>
-    </form>
-
     <div class="lib-grid">
         @foreach (var g in Model)
         {

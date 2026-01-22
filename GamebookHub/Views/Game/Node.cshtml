@@ -1,10 +1,16 @@
-﻿@using Markdig
+@using Markdig
+@using System.Collections.Generic
+@using System.Globalization
+@using System.Linq
+@using System.Text.Json
 @model (GamebookHub.Models.Gamebook gb, GamebookHub.Models.GameNode node, GamebookHub.Models.Playthrough pt)
 
 @{
     ViewData["Title"] = Model.gb.Title;
     var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
     string html = Markdown.ToHtml(Model.node.Text ?? "", pipeline);
+    var playerFlags = ParseFlags(Model.pt.FlagsJson);
+    var attributeMap = BuildAttributeMap(Model.gb);
 }
 
 @section Styles {
@@ -46,9 +52,33 @@
                 <div class="list-group list-group-flush">
                     @foreach (var c in Model.node.Choices)
                     {
-                        <button class="list-group-item list-group-item-action game-choice"
-                                type="submit" name="choiceId" value="@c.Id">
-                            @c.Label
+                        var requirementState = EvaluateChoice(c, playerFlags, attributeMap);
+                        var disabledAttr = requirementState.IsMet ? null : "disabled";
+                        var buttonClasses = "list-group-item list-group-item-action game-choice";
+                        if (!requirementState.IsMet && requirementState.HasRequirement)
+                        {
+                            buttonClasses += " game-choice-locked";
+                        }
+
+                        <button class="@buttonClasses"
+                                type="submit"
+                                name="choiceId"
+                                value="@c.Id"
+                                @disabledAttr>
+                            <div class="choice-label">@c.Label</div>
+                            @if (requirementState.HasRequirement && !requirementState.IsMet && requirementState.Details.Any())
+                            {
+                                foreach (var detail in requirementState.Details)
+                                {
+                                    var resultText = detail.Passed ? "Aprovado" : "Reprovado";
+                                    var resultClass = detail.Passed ? "text-success" : "text-danger";
+                                    <small class="choice-requirement @resultClass">
+                                        Para acessar esta opção o personagem precisa de <strong>@detail.Label @detail.Comparator @detail.RequiredValue</strong>.
+                                        O personagem atualmente tem <strong>@detail.PlayerValue</strong>.
+                                        Conferência: <strong>@resultText</strong>.
+                                    </small>
+                                }
+                            }
                         </button>
                     }
                 </div>
@@ -56,3 +86,336 @@
         </div>
     }
 </div>
+
+@functions {
+    private class ChoiceRequirementState
+    {
+        public bool HasRequirement { get; set; }
+        public bool IsMet { get; set; }
+        public List<RequirementDetail> Details { get; } = new();
+    }
+
+    private class RequirementDetail
+    {
+        public string Label { get; set; } = string.Empty;
+        public string Comparator { get; set; } = "=";
+        public string RequiredValue { get; set; } = string.Empty;
+        public string PlayerValue { get; set; } = string.Empty;
+        public bool Passed { get; set; }
+    }
+
+    private class AttributeLookup
+    {
+        public GamebookHub.Models.AttributeDefinition Definition { get; init; } = default!;
+        public string Key { get; init; } = string.Empty;
+    }
+
+    private static Dictionary<string, JsonElement> ParseFlags(string? input)
+    {
+        var comparer = StringComparer.OrdinalIgnoreCase;
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return new Dictionary<string, JsonElement>(comparer);
+        }
+
+        var dict = TryParseJsonDictionary(input, comparer);
+        if (dict.Count > 0)
+        {
+            return dict;
+        }
+
+        return ParseSimpleRequirementSyntax(input, comparer);
+    }
+
+    private static Dictionary<string, JsonElement> TryParseJsonDictionary(string input, IEqualityComparer<string> comparer)
+    {
+        try
+        {
+            var parsed = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(input);
+            if (parsed != null)
+            {
+                return new Dictionary<string, JsonElement>(parsed, comparer);
+            }
+        }
+        catch
+        {
+            // ignore and fall back to simple syntax parsing
+        }
+
+        return new Dictionary<string, JsonElement>(comparer);
+    }
+
+    private static Dictionary<string, JsonElement> ParseSimpleRequirementSyntax(string input, IEqualityComparer<string> comparer)
+    {
+        var dict = new Dictionary<string, JsonElement>(comparer);
+        var segments = input
+            .Split(new[] { ';', ',', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+        if (segments.Length == 0)
+        {
+            segments = new[] { input };
+        }
+
+        foreach (var raw in segments)
+        {
+            var trimmed = raw.Trim();
+            if (string.IsNullOrEmpty(trimmed))
+            {
+                continue;
+            }
+
+            var (key, value) = SplitRequirement(trimmed);
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                continue;
+            }
+
+            dict[key] = CreateJsonValueElement(value);
+        }
+
+        return dict;
+    }
+
+    private static (string key, string value) SplitRequirement(string expression)
+    {
+        var separators = new[] { ">=", "<=", "=", ":", ">", "<" };
+        foreach (var sep in separators)
+        {
+            var idx = expression.IndexOf(sep, StringComparison.Ordinal);
+            if (idx >= 0)
+            {
+                var key = expression[..idx].Trim();
+                var value = expression[(idx + sep.Length)..].Trim();
+                return (key, value);
+            }
+        }
+
+        return (expression.Trim(), "true");
+    }
+
+    private static JsonElement CreateJsonValueElement(string valueText)
+    {
+        if (string.IsNullOrWhiteSpace(valueText))
+        {
+            return JsonSerializer.SerializeToElement(true);
+        }
+
+        if (decimal.TryParse(valueText, NumberStyles.Any, CultureInfo.InvariantCulture, out var decimalValue))
+        {
+            return JsonSerializer.SerializeToElement(decimalValue);
+        }
+
+        if (bool.TryParse(valueText, out var boolValue))
+        {
+            return JsonSerializer.SerializeToElement(boolValue);
+        }
+
+        return JsonSerializer.SerializeToElement(valueText);
+    }
+
+    private static IDictionary<string, AttributeLookup> BuildAttributeMap(GamebookHub.Models.Gamebook gamebook)
+    {
+        var dict = new Dictionary<string, AttributeLookup>(StringComparer.OrdinalIgnoreCase);
+        if (gamebook.CharacterSheet?.Attributes == null)
+        {
+            return dict;
+        }
+
+        foreach (var attr in gamebook.CharacterSheet.Attributes)
+        {
+            if (string.IsNullOrWhiteSpace(attr.Key) && string.IsNullOrWhiteSpace(attr.Label))
+            {
+                continue;
+            }
+
+            var lookup = new AttributeLookup
+            {
+                Definition = attr,
+                Key = attr.Key ?? string.Empty
+            };
+
+            if (!string.IsNullOrWhiteSpace(attr.Key))
+            {
+                dict[attr.Key] = lookup;
+            }
+
+            if (!string.IsNullOrWhiteSpace(attr.Label))
+            {
+                dict[attr.Label] = lookup;
+            }
+        }
+
+        return dict;
+    }
+
+    private static ChoiceRequirementState EvaluateChoice(
+        GamebookHub.Models.GameChoice choice,
+        Dictionary<string, JsonElement> playerFlags,
+        IDictionary<string, AttributeLookup> attributeMap)
+    {
+        var state = new ChoiceRequirementState { IsMet = true };
+        if (string.IsNullOrWhiteSpace(choice.RequiresFlags))
+        {
+            return state;
+        }
+
+        var requirements = ParseFlags(choice.RequiresFlags);
+        if (requirements.Count == 0)
+        {
+            return state;
+        }
+
+        state.HasRequirement = true;
+        foreach (var req in requirements)
+        {
+            var detail = BuildRequirementDetail(req.Key, req.Value, playerFlags, attributeMap);
+            state.Details.Add(detail);
+            if (!detail.Passed)
+            {
+                state.IsMet = false;
+            }
+        }
+
+        return state;
+    }
+
+    private static RequirementDetail BuildRequirementDetail(
+        string key,
+        JsonElement requiredValue,
+        Dictionary<string, JsonElement> playerFlags,
+        IDictionary<string, AttributeLookup> attributeMap)
+    {
+        var normalizedKey = NormalizeRequirementKey(key);
+        AttributeLookup? lookup = null;
+        if (!string.IsNullOrWhiteSpace(normalizedKey))
+        {
+            attributeMap.TryGetValue(normalizedKey, out lookup);
+            lookup ??= attributeMap.Values.FirstOrDefault(a =>
+                string.Equals(a.Definition.Key, normalizedKey, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(a.Definition.Label, normalizedKey, StringComparison.OrdinalIgnoreCase));
+        }
+
+        var hasAttribute = lookup != null;
+        var label = hasAttribute
+            ? (lookup!.Definition.Label ?? lookup.Definition.Key ?? key)
+            : key;
+        var lookupKey = !string.IsNullOrWhiteSpace(normalizedKey) ? normalizedKey : key;
+        var detail = new RequirementDetail
+        {
+            Label = label,
+            Comparator = hasAttribute ? ">=" : "=",
+            RequiredValue = FormatRequirementValue(requiredValue),
+            PlayerValue = "-",
+            Passed = false
+        };
+
+        if (hasAttribute && lookup != null)
+        {
+            var attributeDefinition = lookup.Definition;
+            detail.Comparator = ">=";
+            var hasValue = TryGetAttributeDisplayValue(lookup.Key, attributeDefinition, playerFlags, out var playerValue);
+            detail.PlayerValue = hasValue
+                ? playerValue.ToString("0.##", CultureInfo.InvariantCulture)
+                : "sem valor";
+
+            if (hasValue && TryGetDecimal(requiredValue, out var requiredNumber))
+            {
+                detail.Passed = playerValue >= requiredNumber;
+            }
+            else
+            {
+                detail.Passed = false;
+            }
+        }
+        else
+        {
+            if (!string.IsNullOrWhiteSpace(lookupKey) && playerFlags.TryGetValue(lookupKey, out var playerFlag))
+            {
+                detail.PlayerValue = FormatRequirementValue(playerFlag);
+                detail.Passed = ValuesAreEqual(playerFlag, requiredValue);
+            }
+            else
+            {
+                detail.PlayerValue = "sem valor";
+                detail.Passed = false;
+            }
+        }
+
+        return detail;
+    }
+
+    private static string NormalizeRequirementKey(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return string.Empty;
+        }
+
+        var trimmed = raw.Trim();
+        trimmed = trimmed.Trim('{', '}', '"');
+        return trimmed.Trim();
+    }
+
+    private static bool TryGetAttributeDisplayValue(
+        string canonicalKey,
+        GamebookHub.Models.AttributeDefinition definition,
+        Dictionary<string, JsonElement> playerFlags,
+        out decimal value)
+    {
+        if (!string.IsNullOrWhiteSpace(canonicalKey) &&
+            playerFlags.TryGetValue(canonicalKey, out var storedValue) &&
+            TryGetDecimal(storedValue, out value))
+        {
+            return true;
+        }
+
+        if (definition.Default.HasValue)
+        {
+            value = definition.Default.Value;
+            return true;
+        }
+
+        value = 0m;
+        return false;
+    }
+
+    private static bool ValuesAreEqual(JsonElement left, JsonElement right)
+    {
+        var leftText = FormatRequirementValue(left);
+        var rightText = FormatRequirementValue(right);
+        return string.Equals(leftText, rightText, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string FormatRequirementValue(JsonElement element)
+    {
+        return element.ValueKind switch
+        {
+            JsonValueKind.String => element.GetString() ?? string.Empty,
+            JsonValueKind.True => "true",
+            JsonValueKind.False => "false",
+            JsonValueKind.Undefined => string.Empty,
+            JsonValueKind.Null => string.Empty,
+            _ => element.ToString()
+        };
+    }
+
+    private static bool TryGetDecimal(JsonElement element, out decimal value)
+    {
+        switch (element.ValueKind)
+        {
+            case JsonValueKind.Number:
+                return element.TryGetDecimal(out value);
+            case JsonValueKind.String:
+                return decimal.TryParse(element.GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out value);
+            case JsonValueKind.True:
+                value = 1m;
+                return true;
+            case JsonValueKind.False:
+                value = 0m;
+                return true;
+            default:
+                value = 0m;
+                return false;
+        }
+    }
+}

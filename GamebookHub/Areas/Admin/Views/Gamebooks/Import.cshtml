@@ -15,8 +15,32 @@
 
     <div class="mb-3">
         <label class="form-label">JSON</label>
-        <textarea name="json" class="form-control" rows="18"></textarea>
+        <textarea name="json" class="form-control" rows="18">
+        {
+          "title": "Título do gamebook (nome que será exibido)",
+          "slug": "identificador-url-amigavel-sem-espacos-e-sem-acentos",
+          "description": "Descrição do gamebook (opcional)",
+          "coverUrl": "URL da capa/imagem (opcional)",
+          "isPublished": true,
+          "nodes": [
+            {
+              "key": "Chave única do nó (ex: START, N1, FINAL_1), Atenção, a primeira sempre tem que começar com Start ",
+              "text": "Texto/conteúdo mostrado ao jogador neste nó",
+              "isEnding": false,
+              "choices": [
+                {
+                  "label": "Texto do botão/opção que o jogador vê",
+                  "toNodeKey": "Key do nó de destino (deve existir em nodes[].key) e ser identico a Key de destino",
+                  "requiresFlags": "Flags necessárias para esta escolha aparecer/ser válida (opcional)",
+                  "setsFlags": "Flags que serão adicionadas/ativadas ao escolher (opcional)"
+                }
+              ]
+            }
+          ]
+        }
+  </textarea>
     </div>
+
 
     <button class="btn btn-primary" type="submit">Importar</button>
     <a class="btn btn-secondary" asp-area="Admin" asp-controller="Gamebooks" asp-action="Index">Voltar</a>

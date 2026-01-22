@@ -1,211 +1,364 @@
 ﻿@model GamebookHub.Models.Gamebook
 @using GamebookHub.Models
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Gamebook";
     var existingAttrCount = Model?.CharacterSheet?.Attributes?.Count ?? 0;
 }
 
-<h1>Edit</h1>
-<h4>Gamebook</h4>
-<hr />
-<div class="row">
-    <div class="col-md-8">
-        <form asp-action="Edit">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-
-            <!-- Metadados básicos -->
-            <div class="form-group mb-3">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label asp-for="Slug" class="control-label"></label>
-                <input asp-for="Slug" class="form-control" />
-                <span asp-validation-for="Slug" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label asp-for="CoverUrl" class="control-label"></label>
-                <input asp-for="CoverUrl" class="form-control" />
-                <span asp-validation-for="CoverUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label asp-for="AuthorId" class="control-label"></label>
-                <input asp-for="AuthorId" class="form-control" />
-                <span asp-validation-for="AuthorId" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label asp-for="PublishedAt" class="control-label"></label>
-                <input asp-for="PublishedAt" class="form-control" type="datetime-local" />
-                <span asp-validation-for="PublishedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check mb-4">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsPublished" /> @Html.DisplayNameFor(model => model.IsPublished)
-                </label>
-            </div>
-
-            <!-- ============================  Ficha do Personagem  ============================ -->
-            <div class="card mb-4">
-                <div class="card-header">Ficha do Personagem</div>
-                <div class="card-body">
-                    <!-- Toggle principal -->
-                    <div class="form-check form-switch mb-3">
-                        <input class="form-check-input"
-                               type="checkbox"
-                               id="cs-enabled"
-                               name="CharacterSheet.Enabled"
-                               value="true"
-                               @(Model?.CharacterSheet?.Enabled == true ? "checked" : "") />
-                        <input type="hidden" name="CharacterSheet.Enabled" value="false" />
-
-                        <label class="form-check-label" for="cs-enabled">Tem ficha?</label>
-                    </div>
-
-                    <div id="cs-block" style="display:@((Model?.CharacterSheet?.Enabled ?? false) ? "block" : "none")">
-                        <!-- Atributos -->
-                        <h5 class="mt-2">Atributos</h5>
-                        <p class="text-muted">Defina atributos genéricos (ex.: Força, Defesa, Inteligência, HP...).</p>
-
-                        <div id="attributes-list">
-                            @if (Model?.CharacterSheet?.Attributes != null && Model.CharacterSheet.Attributes.Count > 0)
-                            {
-                                for (var i = 0; i < Model.CharacterSheet.Attributes.Count; i++)
-                                {
-                                    var prefix = $"CharacterSheet.Attributes[{i}]";
-                                    <div class="border rounded p-3 mb-3 attribute-item" data-index="@i">
-
-                                        <!-- Necessário para binding da coleção no POST -->
-                                        <input type="hidden" name="CharacterSheet.Attributes.Index" value="@i" />
-                                        <input type="hidden" name="@($"{prefix}.Id")" value="@Model.CharacterSheet.Attributes[i].Id" />
-
-                                        <div class="row g-3">
-                                            <div class="col-md-4">
-                                                <label class="form-label">Label</label>
-                                                <input class="form-control attr-label" name="@($"{prefix}.Label")" value="@Model.CharacterSheet.Attributes[i].Label" />
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label">Key</label>
-                                                <input class="form-control attr-key" name="@($"{prefix}.Key")" value="@Model.CharacterSheet.Attributes[i].Key" />
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label">Tipo</label>
-                                                <select class="form-select attr-type" name="@($"{prefix}.Type")">
-                                                    @foreach (var t in Enum.GetNames(typeof(AttributeType)))
-                                                    {
-                                                        var isSelected = t == Model.CharacterSheet.Attributes[i].Type.ToString();
-                                                        <option value="@t" selected="@(isSelected ? "selected" : null)">@t</option>
-                                                    }
-                                                </select>
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <label class="form-label">Min</label>
-                                                <input class="form-control" name="@($"{prefix}.Min")" value="@Model.CharacterSheet.Attributes[i].Min" />
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label">Max</label>
-                                                <input class="form-control" name="@($"{prefix}.Max")" value="@Model.CharacterSheet.Attributes[i].Max" />
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label">Default</label>
-                                                <input class="form-control" name="@($"{prefix}.Default")" value="@Model.CharacterSheet.Attributes[i].Default" />
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label">Enum Options (separadas por vírgula)</label>
-                                                <input class="form-control enum-options" name="@($"{prefix}.EnumOptions")" value="@Model.CharacterSheet.Attributes[i].EnumOptions" />
-                                            </div>
-
-                                            <div class="col-md-3 d-flex align-items-end">
-                                                <div class="form-check">
-                                                    <!-- checkbox PRIMEIRO -->
-                                                    <input class="form-check-input"
-                                                           type="checkbox"
-                                                           name="@($"{prefix}.Visible")"
-                                                           value="true"
-                                                           @(Model.CharacterSheet.Attributes[i].Visible ? "checked" : "") />
-                                                    <!-- hidden DEPOIS -->
-                                                    <input type="hidden" name="@($"{prefix}.Visible")" value="false" />
-                                                    <label class="form-check-label">Visível</label>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-3">
-                                                <label class="form-label">Ordem</label>
-                                                <input class="form-control" type="number" name="@($"{prefix}.Order")" value="@Model.CharacterSheet.Attributes[i].Order" />
-                                            </div>
-                                        </div>
-
-                                        <div class="mt-3 text-end">
-                                            <button type="button" class="btn btn-outline-danger btn-sm remove-attribute">Remover</button>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                        </div>
-
-                        <button type="button" class="btn btn-outline-primary" id="add-attribute">Adicionar atributo</button>
-
-                        <hr class="my-4" />
-
-                        <!-- Inventário -->
-                        <h5>Inventário</h5>
-                        <div class="form-check form-switch mb-3">
-                            <input class="form-check-input"
-                                   type="checkbox"
-                                   id="inv-enabled"
-                                   name="CharacterSheet.Inventory.Enabled"
-                                   value="true"
-                                   @(Model?.CharacterSheet?.Inventory?.Enabled == true ? "checked" : "") />
-                            <input type="hidden" name="CharacterSheet.Inventory.Enabled" value="false" />
-                            <label class="form-check-label" for="inv-enabled">Usa inventário?</label>
-                        </div>
-                        <div id="inv-block" style="display:@((Model?.CharacterSheet?.Inventory?.Enabled ?? false) ? "block" : "none")">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Modo</label>
-                                    <select class="form-select" id="inv-mode" name="CharacterSheet.Inventory.Mode">
-                                        @{
-                                            var mode = Model?.CharacterSheet?.Inventory?.Mode.ToString() ?? "Unlimited";
-                                        }
-                                        <option value="Unlimited" selected="@(mode == "Unlimited")">Ilimitado</option>
-                                        <option value="Slots" selected="@(mode == "Slots")">Por slots</option>
-                                        <option value="Weight" selected="@(mode == "Weight")">Por peso/volume</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3 inv-field inv-slots" style="display:@((Model?.CharacterSheet?.Inventory?.Mode == InventoryMode.Slots) ? "block" : "none")">
-                                    <label class="form-label">Slots</label>
-                                    <input class="form-control" type="number" min="1" name="CharacterSheet.Inventory.Slots" value="@(Model?.CharacterSheet?.Inventory?.Slots)" />
-                                </div>
-                                <div class="col-md-3 inv-field inv-capacity" style="display:@((Model?.CharacterSheet?.Inventory?.Mode == InventoryMode.Weight) ? "block" : "none")">
-                                    <label class="form-label">Capacidade</label>
-                                    <input class="form-control" type="number" step="0.01" min="0" name="CharacterSheet.Inventory.Capacity" value="@(Model?.CharacterSheet?.Inventory?.Capacity)" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- ============================  /Ficha do Personagem  ============================ -->
-
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-link">Back to List</a>
-            </div>
-        </form>
-    </div>
-</div>
-
 @section Scripts {
+    <link rel="stylesheet" href="~/css/admin-gamebook-edit.css" />
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script src="~/js/gamebook-create.js" asp-append-version="true"></script>
 }
+
+<!-- PAGE HEADER -->
+<div class="gb-edit-header">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="gb-header-icon">
+                        <i class="bi bi-pencil-square"></i>
+                    </div>
+                    <div>
+                        <h1 class="mb-1">Editar Gamebook</h1>
+                        <p class="text-muted mb-0">
+                            <i class="bi bi-info-circle"></i>
+                            Atualize as informações e configurações do seu gamebook
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="gb-edit-container">
+    <div class="row">
+        <div class="col-lg-9">
+            <form asp-action="Edit" class="gb-edit-form">
+                <!-- VALIDATION SUMMARY -->
+                @if (ViewData.ModelState.Any(x => x.Value.Errors.Count > 0))
+                {
+                    <div class="alert alert-danger mb-4">
+                        <div class="d-flex gap-2">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <div>
+                                <strong>Erros de validação encontrados:</strong>
+                                <div asp-validation-summary="All" class="mt-2 mb-0"></div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <input type="hidden" asp-for="Id" />
+
+                <!-- SECTION 1: INFORMAÇÕES GERAIS -->
+                <div class="gb-section">
+                    <div class="gb-section-header">
+                        <h2>
+                            <span class="gb-section-number">1</span>
+                            Informações Gerais
+                        </h2>
+                    </div>
+
+                    <div class="row g-3">
+                        <!-- TÍTULO -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label asp-for="Title" class="form-label gb-form-label">
+                                    <i class="bi bi-type"></i>
+                                    @Html.DisplayNameFor(m => m.Title)
+                                </label>
+                                <input asp-for="Title" class="form-control gb-form-control" placeholder="Ex: A Jornada do Herói" />
+                                <span asp-validation-for="Title" class="invalid-feedback d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- SLUG -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label asp-for="Slug" class="form-label gb-form-label">
+                                    <i class="bi bi-link"></i>
+                                    @Html.DisplayNameFor(m => m.Slug)
+                                </label>
+                                <input asp-for="Slug" class="form-control gb-form-control font-monospace" placeholder="jornada-do-heroi" />
+                                <span asp-validation-for="Slug" class="invalid-feedback d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- DESCRIÇÃO -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label asp-for="Description" class="form-label gb-form-label">
+                                    <i class="bi bi-chat-left-text"></i>
+                                    @Html.DisplayNameFor(m => m.Description)
+                                </label>
+                                <input asp-for="Description" class="form-control gb-form-control" placeholder="Descreva brevemente seu gamebook..." />
+                                <span asp-validation-for="Description" class="invalid-feedback d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- COVER URL -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label asp-for="CoverUrl" class="form-label gb-form-label">
+                                    <i class="bi bi-image"></i>
+                                    @Html.DisplayNameFor(m => m.CoverUrl)
+                                </label>
+                                <input asp-for="CoverUrl" class="form-control gb-form-control" placeholder="https://..." />
+                                <span asp-validation-for="CoverUrl" class="invalid-feedback d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- AUTOR -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label asp-for="AuthorId" class="form-label gb-form-label">
+                                    <i class="bi bi-person"></i>
+                                    @Html.DisplayNameFor(m => m.AuthorId)
+                                </label>
+                                <input asp-for="AuthorId" class="form-control gb-form-control" />
+                                <span asp-validation-for="AuthorId" class="invalid-feedback d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- DATA DE PUBLICAÇÃO -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label asp-for="PublishedAt" class="form-label gb-form-label">
+                                    <i class="bi bi-calendar-event"></i>
+                                    @Html.DisplayNameFor(m => m.PublishedAt)
+                                </label>
+                                <input asp-for="PublishedAt" class="form-control gb-form-control" type="datetime-local" />
+                                <span asp-validation-for="PublishedAt" class="invalid-feedback d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- STATUS DE PUBLICAÇÃO -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label gb-form-label">
+                                    <i class="bi bi-check-circle"></i>
+                                    Status
+                                </label>
+                                <div class="gb-switch-container">
+                                    <div class="form-check form-switch gb-form-switch">
+                                        <input class="form-check-input" asp-for="IsPublished" type="checkbox" />
+                                        <label class="form-check-label" asp-for="IsPublished">
+                                            Publicado
+                                        </label>
+                                    </div>
+                                    <p class="text-muted small mb-0">
+                                        @(Model.IsPublished ? "Este gamebook está visível publicamente" : "Este gamebook está em rascunho")
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- SECTION 2: FICHA DE PERSONAGEM -->
+                <div class="gb-section">
+                    <div class="gb-section-header">
+                        <h2>
+                            <span class="gb-section-number">2</span>
+                            Ficha de Personagem
+                        </h2>
+                    </div>
+
+                    <!-- TOGGLE FICHA -->
+                    <div class="gb-toggle-group mb-4">
+                        <div class="form-check form-switch gb-form-switch">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   id="cs-enabled"
+                                   name="CharacterSheet.Enabled"
+                                   value="true"
+                                   @(Model?.CharacterSheet?.Enabled == true ? "checked" : "") />
+                            <input type="hidden" name="CharacterSheet.Enabled" value="false" />
+                            <label class="form-check-label" for="cs-enabled">
+                                <i class="bi bi-person-badge"></i>
+                                Habilitar Ficha de Personagem
+                            </label>
+                        </div>
+                        <p class="text-muted small">Ative para permitir que os jogadores criem e gerenciem personagens</p>
+                    </div>
+
+                    <div id="cs-block" style="display:@((Model?.CharacterSheet?.Enabled ?? false) ? "block" : "none")">
+                        <!-- ATRIBUTOS -->
+                        <div class="gb-subsection">
+                            <h5 class="gb-subsection-title">
+                                <i class="bi bi-lightning-fill"></i>
+                                Atributos
+                            </h5>
+                            <p class="text-muted small">Defina atributos genéricos para os personagens (ex.: Força, Defesa, Inteligência, HP...).</p>
+
+                            <div id="attributes-list" class="gb-attributes-list">
+                                @if (Model?.CharacterSheet?.Attributes != null && Model.CharacterSheet.Attributes.Count > 0)
+                                {
+                                    for (var i = 0; i < Model.CharacterSheet.Attributes.Count; i++)
+                                    {
+                                        var prefix = $"CharacterSheet.Attributes[{i}]";
+                                        <div class="attribute-card" data-index="@i">
+                                            <input type="hidden" name="CharacterSheet.Attributes.Index" value="@i" />
+                                            <input type="hidden" name="@($"{prefix}.Id")" value="@Model.CharacterSheet.Attributes[i].Id" />
+
+                                            <div class="row g-2 align-items-end">
+                                                <div class="col-md-3">
+                                                    <label class="form-label small">Label</label>
+                                                    <input class="form-control attr-label gb-form-control" name="@($"{prefix}.Label")" value="@Model.CharacterSheet.Attributes[i].Label" placeholder="Ex: Força" />
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="form-label small">Key</label>
+                                                    <input class="form-control attr-key gb-form-control font-monospace" name="@($"{prefix}.Key")" value="@Model.CharacterSheet.Attributes[i].Key" placeholder="forca" />
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="form-label small">Tipo</label>
+                                                    <select class="form-select attr-type gb-form-control" name="@($"{prefix}.Type")">
+                                                        @foreach (var t in Enum.GetNames(typeof(AttributeType)))
+                                                        {
+                                                            var isSelected = t == Model.CharacterSheet.Attributes[i].Type.ToString();
+                                                            <option value="@t" selected="@(isSelected ? "selected" : null)">@t</option>
+                                                        }
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <label class="form-label small">Min</label>
+                                                    <input class="form-control gb-form-control" name="@($"{prefix}.Min")" value="@Model.CharacterSheet.Attributes[i].Min" placeholder="0" />
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label class="form-label small">Max</label>
+                                                    <input class="form-control gb-form-control" name="@($"{prefix}.Max")" value="@Model.CharacterSheet.Attributes[i].Max" placeholder="100" />
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label class="form-label small">Padrão</label>
+                                                    <input class="form-control gb-form-control" name="@($"{prefix}.Default")" value="@Model.CharacterSheet.Attributes[i].Default" placeholder="50" />
+                                                </div>
+
+                                                <div class="col-md-5">
+                                                    <label class="form-label small">Opções (vírgula)</label>
+                                                    <input class="form-control enum-options gb-form-control" name="@($"{prefix}.EnumOptions")" value="@Model.CharacterSheet.Attributes[i].EnumOptions" placeholder="Opção1,Opção2,Opção3" />
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input"
+                                                               type="checkbox"
+                                                               id="visible-@i"
+                                                               name="@($"{prefix}.Visible")"
+                                                               value="true"
+                                                               @(Model.CharacterSheet.Attributes[i].Visible ? "checked" : "") />
+                                                        <input type="hidden" name="@($"{prefix}.Visible")" value="false" />
+                                                        <label class="form-check-label small" for="visible-@i">Visível</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <label class="form-label small">Ordem</label>
+                                                    <input class="form-control gb-form-control" type="number" name="@($"{prefix}.Order")" value="@Model.CharacterSheet.Attributes[i].Order" />
+                                                </div>
+
+                                                <div class="col-md-2 text-end">
+                                                    <button type="button" class="btn btn-sm btn-danger-outline remove-attribute" title="Remover atributo">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+
+                            <button type="button" class="btn btn-outline-primary" id="add-attribute">
+                                <i class="bi bi-plus-circle"></i>
+                                Adicionar Atributo
+                            </button>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <!-- INVENTÁRIO -->
+                        <div class="gb-subsection">
+                            <h5 class="gb-subsection-title">
+                                <i class="bi bi-bag"></i>
+                                Inventário
+                            </h5>
+
+                            <!-- TOGGLE INVENTÁRIO -->
+                            <div class="gb-toggle-group mb-3">
+                                <div class="form-check form-switch gb-form-switch">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           id="inv-enabled"
+                                           name="CharacterSheet.Inventory.Enabled"
+                                           value="true"
+                                           @(Model?.CharacterSheet?.Inventory?.Enabled == true ? "checked" : "") />
+                                    <input type="hidden" name="CharacterSheet.Inventory.Enabled" value="false" />
+                                    <label class="form-check-label" for="inv-enabled">
+                                        Habilitar Inventário
+                                    </label>
+                                </div>
+                                <p class="text-muted small">Permite que os personagens carreguem itens</p>
+                            </div>
+
+                            <div id="inv-block" style="display:@((Model?.CharacterSheet?.Inventory?.Enabled ?? false) ? "block" : "none")">
+                                <div class="row g-3">
+                                    <!-- MODO DE INVENTÁRIO -->
+                                    <div class="col-md-6">
+                                        <label class="form-label gb-form-label">
+                                            <i class="bi bi-sliders"></i>
+                                            Modo
+                                        </label>
+                                        <select class="form-select gb-form-control" id="inv-mode" name="CharacterSheet.Inventory.Mode">
+                                            @{
+                                                var mode = Model?.CharacterSheet?.Inventory?.Mode.ToString() ?? "Unlimited";
+                                            }
+                                            <option value="Unlimited" selected="@(mode == "Unlimited")">Ilimitado</option>
+                                            <option value="Slots" selected="@(mode == "Slots")">Por Slots</option>
+                                            <option value="Weight" selected="@(mode == "Weight")">Por Peso/Volume</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- SLOTS -->
+                                    <div class="col-md-6 inv-slots" style="display:@((Model?.CharacterSheet?.Inventory?.Mode == InventoryMode.Slots) ? "block" : "none")">
+                                        <label class="form-label gb-form-label">
+                                            <i class="bi bi-grid-3x3-gap"></i>
+                                            Número de Slots
+                                        </label>
+                                        <input class="form-control gb-form-control" type="number" min="1" name="CharacterSheet.Inventory.Slots" value="@(Model?.CharacterSheet?.Inventory?.Slots)" placeholder="20" />
+                                    </div>
+
+                                    <!-- CAPACIDADE -->
+                                    <div class="col-md-6 inv-capacity" style="display:@((Model?.CharacterSheet?.Inventory?.Mode == InventoryMode.Weight) ? "block" : "none")">
+                                        <label class="form-label gb-form-label">
+                                            <i class="bi bi-scale"></i>
+                                            Capacidade (kg/unidade)
+                                        </label>
+                                        <input class="form-control gb-form-control" type="number" step="0.01" min="0" name="CharacterSheet.Inventory.Capacity" value="@(Model?.CharacterSheet?.Inventory?.Capacity)" placeholder="50" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FORM ACTIONS -->
+                <div class="gb-actions">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-check-circle"></i>
+                        Salvar Alterações
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary btn-lg">
+                        <i class="bi bi-arrow-left"></i>
+                        Voltar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

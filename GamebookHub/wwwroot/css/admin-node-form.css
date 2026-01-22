@@ -1,0 +1,494 @@
+/* ================================================
+   NODE FORM - PROFESSIONAL STYLING
+   ================================================ */
+
+:root {
+    --gb-primary: #2563eb;
+    --gb-secondary: #64748b;
+    --gb-success: #10b981;
+    --gb-warning: #f59e0b;
+    --gb-danger: #ef4444;
+    --gb-info: #06b6d4;
+    --gb-light: #f8fafc;
+    --gb-dark: #1e293b;
+    --gb-border: #e2e8f0;
+    --gb-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --gb-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --gb-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    --gb-radius: 0.5rem;
+    --gb-transition: all 0.3s ease;
+}
+
+/* ================================================
+   PAGE HEADER
+   ================================================ */
+
+.gb-form-header {
+    background: linear-gradient(135deg, var(--gb-primary) 0%, #1e40af 100%);
+    color: white;
+    padding: 1.5rem 0 2.5rem 0;
+    margin-bottom: 2.5rem;
+    box-shadow: var(--gb-shadow-xl);
+}
+
+.gb-form-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.gb-form-header h1 i {
+    font-size: 1.8rem;
+}
+
+.gb-form-header p {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.95rem;
+    opacity: 0.9;
+}
+
+.gb-form-header .btn-secondary {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--gb-transition);
+}
+
+.gb-form-header .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.gb-form-header .btn-sm {
+    padding: 0.5rem 1rem;
+}
+
+/* ================================================
+   CONTAINER
+   ================================================ */
+
+.gb-form-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1rem 3rem 1rem;
+}
+
+/* ================================================
+   FORM
+   ================================================ */
+
+.gb-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* ================================================
+   SECTIONS
+   ================================================ */
+
+.gb-form-section {
+    background: white;
+    border-radius: var(--gb-radius);
+    padding: 2rem;
+    border: 1px solid var(--gb-border);
+    box-shadow: var(--gb-shadow);
+    transition: var(--gb-transition);
+}
+
+.gb-form-section:hover {
+    box-shadow: var(--gb-shadow-lg);
+}
+
+.gb-form-section-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--gb-light);
+}
+
+.gb-form-section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gb-dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.gb-section-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gb-primary), #1e40af);
+    color: white;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+/* ================================================
+   FORM CONTROLS
+   ================================================ */
+
+.gb-form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gb-dark);
+    margin-bottom: 0.5rem;
+}
+
+.gb-form-label i {
+    font-size: 1rem;
+    color: var(--gb-primary);
+    flex-shrink: 0;
+}
+
+.gb-form-control {
+    border: 1px solid var(--gb-border);
+    border-radius: var(--gb-radius);
+    padding: 0.625rem 0.875rem;
+    font-size: 0.95rem;
+    color: var(--gb-dark);
+    background: white;
+    transition: var(--gb-transition);
+}
+
+.gb-form-control:focus {
+    border-color: var(--gb-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.gb-form-control::placeholder {
+    color: #cbd5e1;
+}
+
+textarea.gb-form-control {
+    resize: vertical;
+    min-height: 120px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.form-text {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+}
+
+.form-text.text-muted {
+    color: var(--gb-secondary) !important;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+/* ================================================
+   SWITCHES & TOGGLES
+   ================================================ */
+
+.gb-form-switch {
+    margin-bottom: 0;
+}
+
+.gb-form-switch .form-check-input {
+    width: 2.5rem;
+    height: 1.25rem;
+    margin-top: 0.25rem;
+    cursor: pointer;
+    border: 1px solid var(--gb-border);
+    background: #e2e8f0;
+    transition: var(--gb-transition);
+}
+
+.gb-form-switch .form-check-input:checked {
+    background: var(--gb-primary);
+    border-color: var(--gb-primary);
+}
+
+.gb-form-switch .form-check-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--gb-dark);
+    cursor: pointer;
+    margin-left: 0.5rem;
+    margin-bottom: 0;
+}
+
+.gb-form-switch .form-check-label i {
+    font-size: 1.1rem;
+    color: var(--gb-primary);
+}
+
+.gb-toggle-group {
+    background: var(--gb-light);
+    border: 1px solid var(--gb-border);
+    border-radius: var(--gb-radius);
+    padding: 1rem;
+    margin-bottom: 0;
+}
+
+.gb-toggle-group p {
+    margin: 0.5rem 0 0 0;
+}
+
+/* ================================================
+   VALIDATION
+   ================================================ */
+
+.invalid-feedback {
+    color: var(--gb-danger);
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+}
+
+.gb-form-control.is-invalid {
+    border-color: var(--gb-danger);
+}
+
+.gb-form-control.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.alert {
+    border-radius: var(--gb-radius);
+    border-left: 4px solid currentColor;
+    padding: 1rem;
+}
+
+.alert-danger {
+    background: #fef2f2;
+    border-color: var(--gb-danger);
+    color: #7f1d1d;
+}
+
+.alert i {
+    flex-shrink: 0;
+    font-size: 1.2rem;
+}
+
+/* ================================================
+   BUTTONS
+   ================================================ */
+
+.btn {
+    border-radius: var(--gb-radius);
+    font-weight: 600;
+    transition: var(--gb-transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.75rem;
+    font-size: 1rem;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+}
+
+.btn i {
+    font-size: 1.1rem;
+}
+
+.btn-primary {
+    background: var(--gb-primary);
+    border-color: var(--gb-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.btn-secondary {
+    background: var(--gb-secondary);
+    border-color: var(--gb-secondary);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #475569;
+    border-color: #475569;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+}
+
+/* ================================================
+   FORM ACTIONS
+   ================================================ */
+
+.gb-form-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-top: 2rem;
+    border-top: 2px solid var(--gb-light);
+}
+
+/* ================================================
+   RESPONSIVE DESIGN
+   ================================================ */
+
+@media (max-width: 768px) {
+    .gb-form-header {
+        padding: 1rem 0 1.5rem 0;
+        margin-bottom: 1.5rem;
+    }
+
+    .gb-form-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .gb-form-section {
+        padding: 1.5rem;
+    }
+
+    .gb-form-section-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .gb-form-section-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .gb-form-control {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    textarea.gb-form-control {
+        min-height: 100px;
+    }
+
+    .gb-form-actions {
+        flex-direction: column;
+    }
+
+    .gb-form-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .gb-form-container {
+        padding: 0 0.5rem 2rem 0.5rem;
+    }
+
+    .gb-form-header {
+        padding: 0.75rem 0 1.25rem 0;
+        margin-bottom: 1rem;
+    }
+
+    .gb-form-header h1 {
+        font-size: 1.25rem;
+        gap: 0.5rem;
+    }
+
+    .gb-form-header h1 i {
+        font-size: 1.4rem;
+    }
+
+    .gb-form-header p {
+        font-size: 0.85rem;
+    }
+
+    .gb-form-section {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .gb-form-section-header h2 {
+        font-size: 1.1rem;
+        gap: 0.5rem;
+    }
+
+    .gb-section-number {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+
+    .gb-form-label {
+        font-size: 0.85rem;
+    }
+
+    .gb-form-control {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    textarea.gb-form-control {
+        min-height: 80px;
+        font-size: 0.8rem;
+    }
+
+    .form-text {
+        font-size: 0.8rem;
+    }
+
+    .gb-toggle-group {
+        padding: 0.75rem;
+    }
+
+    .alert {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .gb-form-actions {
+        gap: 0.5rem;
+        padding-top: 1.5rem;
+    }
+
+    .gb-form-actions .btn-lg {
+        padding: 0.65rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* ================================================
+   PRINT STYLES
+   ================================================ */
+
+@media print {
+    .gb-form-header {
+        background: none;
+        border: 1px solid var(--gb-border);
+        color: var(--gb-dark);
+        margin-bottom: 1rem;
+    }
+
+    .gb-form-section {
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid var(--gb-border);
+    }
+
+    .gb-form-actions {
+        display: none;
+    }
+}

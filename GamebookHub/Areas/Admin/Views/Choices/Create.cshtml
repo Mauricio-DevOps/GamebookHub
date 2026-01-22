@@ -1,44 +1,147 @@
-﻿@model GamebookHub.Models.GameChoice
+@model GamebookHub.Models.GameChoice
 @{
     ViewData["Title"] = "Nova Choice";
+    Layout = "/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-<h3>@ViewData["Title"]</h3>
 
-<form asp-area="Admin" asp-controller="Choices" asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-choice-form.css" asp-append-version="true" />
+}
 
-    <div asp-validation-summary="All" class="text-danger"></div>
-
-    <input type="hidden" asp-for="FromNodeId" />
-
-    <div class="mb-3">
-        <label class="form-label" asp-for="Label"></label>
-        <input asp-for="Label" class="form-control" />
-        <span asp-validation-for="Label" class="text-danger"></span>
+<!-- PAGE HEADER -->
+<div class="gb-choice-header">
+    <div class="container-xxl">
+        <a class="btn btn-secondary btn-sm"
+           asp-area="Admin" asp-controller="Choices" asp-action="Index"
+           asp-route-fromNodeId="@Model.FromNodeId">
+            <i class="bi bi-arrow-left"></i>
+            Voltar às Choices
+        </a>
+        <h1 class="mt-3 mb-2">
+            <i class="bi bi-signpost-split"></i>
+            Criar Nova Choice
+        </h1>
+        <p >
+            Defina o texto apresentado ao leitor e o destino desta decisão.
+            <span class="badge bg-dark bg-opacity-75 ms-2">
+                Nó de origem #@Model.FromNodeId
+            </span>
+        </p>
     </div>
+</div>
 
-    <div class="mb-3">
-        <label class="form-label" asp-for="ToNodeKey"></label>
-        <input asp-for="ToNodeKey" class="form-control" />
-        <small class="text-muted">Deve ser igual ao <code>Key</code> de um nó do mesmo Gamebook.</small>
-        <span asp-validation-for="ToNodeKey" class="text-danger"></span>
+<!-- FORM WRAPPER -->
+<div class="container-xxl">
+    <div class="gb-choice-form-container">
+        <form asp-area="Admin" asp-controller="Choices" asp-action="Create" method="post" class="gb-choice-form">
+            @Html.AntiForgeryToken()
+
+            @if (ViewData.ModelState.Any(x => x.Value.Errors.Count > 0))
+            {
+                <div class="alert alert-danger">
+                    <div class="d-flex gap-2 align-items-start">
+                        <i class="bi bi-exclamation-octagon-fill"></i>
+                        <div>
+                            <strong>Existem campos que precisam de atenção.</strong>
+                            <div asp-validation-summary="All" class="mt-2 mb-0"></div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <input type="hidden" asp-for="FromNodeId" />
+
+            <!-- SECTION: INFORMAÇÕES GERAIS -->
+            <div class="gb-form-section">
+                <div class="gb-form-section-header">
+                    <h2>
+                        <span class="gb-section-number">1</span>
+                        Informações Gerais
+                    </h2>
+                    <p>Defina o rótulo exibido ao leitor e o nó de destino.</p>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-12 col-lg-6">
+                        <label class="form-label gb-form-label" asp-for="Label">
+                            <i class="bi bi-type"></i>
+                            Texto da Choice
+                        </label>
+                        <input asp-for="Label" class="form-control gb-form-control" placeholder="Ex: Seguir o caminho iluminado" />
+                        <small class="form-text text-muted">
+                            <i class="bi bi-info-circle"></i>
+                            Este texto será exibido exatamente como o leitor verá a opção.
+                        </small>
+                        <span asp-validation-for="Label" class="invalid-feedback d-block"></span>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <label class="form-label gb-form-label" asp-for="ToNodeKey">
+                            <i class="bi bi-diagram-3"></i>
+                            Key do Nó de Destino
+                        </label>
+                        <input asp-for="ToNodeKey" class="form-control gb-form-control" placeholder="Ex: floresta_interior" />
+                        <small class="form-text text-muted">
+                            <i class="bi bi-box-arrow-up-right"></i>
+                            Deve corresponder ao <code>Key</code> de um nó existente no mesmo Gamebook.
+                        </small>
+                        <span asp-validation-for="ToNodeKey" class="invalid-feedback d-block"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: FLAGS -->
+            <div class="gb-form-section">
+                <div class="gb-form-section-header">
+                    <h2>
+                        <span class="gb-section-number">2</span>
+                        Regras com Flags (Opcional)
+                    </h2>
+                    <p>Use JSON para exigir ou definir flags durante esta escolha.</p>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-12">
+                        <label class="form-label gb-form-label" asp-for="RequiresFlags">
+                            <i class="bi bi-shield-lock"></i>
+                            RequiresFlags (JSON)
+                        </label>
+                        <textarea asp-for="RequiresFlags" class="form-control gb-form-control" rows="4" placeholder='Ex: { "chave": true }'></textarea>
+                        <small class="form-text text-muted">
+                            <i class="bi bi-lightbulb"></i>
+                            Utilize para bloquear a choice caso o leitor não tenha determinado estado.
+                        </small>
+                        <span asp-validation-for="RequiresFlags" class="invalid-feedback d-block"></span>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label gb-form-label" asp-for="SetsFlags">
+                            <i class="bi bi-pen"></i>
+                            SetsFlags (JSON)
+                        </label>
+                        <textarea asp-for="SetsFlags" class="form-control gb-form-control" rows="4" placeholder='Ex: { "visitou_vila": true }'></textarea>
+                        <small class="form-text text-muted">
+                            <i class="bi bi-journal-check"></i>
+                            Configure os estados que serão atualizados após o leitor escolher esta opção.
+                        </small>
+                        <span asp-validation-for="SetsFlags" class="invalid-feedback d-block"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gb-form-actions">
+                <button class="btn btn-primary btn-lg" type="submit">
+                    <i class="bi bi-check-circle"></i>
+                    Salvar Choice
+                </button>
+                <a class="btn btn-secondary btn-lg"
+                   asp-area="Admin" asp-controller="Choices" asp-action="Index"
+                   asp-route-fromNodeId="@Model.FromNodeId">
+                    <i class="bi bi-arrow-left"></i>
+                    Cancelar
+                </a>
+            </div>
+        </form>
     </div>
-
-    <div class="mb-3">
-        <label class="form-label">RequiresFlags (JSON)</label>
-        <textarea asp-for="RequiresFlags" class="form-control" rows="3"></textarea>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">SetsFlags (JSON)</label>
-        <textarea asp-for="SetsFlags" class="form-control" rows="3"></textarea>
-    </div>
-
-    <button class="btn btn-primary" type="submit">Salvar</button>
-    <a class="btn btn-secondary"
-       asp-area="Admin" asp-controller="Choices" asp-action="Index"
-       asp-route-fromNodeId="@Model.FromNodeId">Voltar</a>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

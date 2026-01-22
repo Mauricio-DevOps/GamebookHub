@@ -1,0 +1,337 @@
+/* ================================================
+   CHOICES INDEX - PROFESSIONAL STYLING
+   ================================================ */
+
+:root {
+    --gb-primary: #2563eb;
+    --gb-secondary: #64748b;
+    --gb-success: #10b981;
+    --gb-danger: #ef4444;
+    --gb-info: #06b6d4;
+    --gb-light: #f8fafc;
+    --gb-dark: #1e293b;
+    --gb-border: #e2e8f0;
+    --gb-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --gb-radius: 0.75rem;
+    --gb-transition: all 0.3s ease;
+}
+
+/* ================================================
+   PAGE HEADER
+   ================================================ */
+
+.gb-choices-header {
+    background: linear-gradient(135deg, var(--gb-primary), #1e40af);
+    color: white;
+    padding: 1.75rem 0 2.75rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.35);
+}
+
+.gb-header-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.gb-header-top .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 0.45rem 1.2rem;
+}
+
+.gb-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.gb-header-content h1 {
+    margin: 0;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.gb-header-content h1 i {
+    font-size: 2.2rem;
+}
+
+.gb-node-meta {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.gb-node-meta .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    border-radius: 999px;
+}
+
+.gb-node-meta i {
+    font-size: 1rem;
+}
+
+/* ================================================
+   CONTENT
+   ================================================ */
+
+.gb-choices-content {
+    padding-bottom: 3rem;
+}
+
+.gb-empty-state {
+    text-align: center;
+    border: 2px dashed var(--gb-border);
+    border-radius: var(--gb-radius);
+    padding: 4rem 2rem;
+    background: white;
+}
+
+.gb-empty-icon {
+    font-size: 4rem;
+    color: var(--gb-primary);
+    opacity: 0.6;
+    margin-bottom: 1rem;
+}
+
+.gb-empty-state h3 {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--gb-dark);
+}
+
+.gb-empty-state p {
+    max-width: 420px;
+    margin: 0 auto;
+    color: var(--gb-secondary);
+}
+
+/* ================================================
+   TABLE CARD
+   ================================================ */
+
+.gb-table-card {
+    border: 1px solid var(--gb-border);
+    border-radius: var(--gb-radius);
+    background: white;
+    box-shadow: var(--gb-shadow);
+    overflow: hidden;
+}
+
+.gb-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--gb-border);
+    background: var(--gb-light);
+}
+
+.gb-table-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.gb-table-title i {
+    color: var(--gb-primary);
+    font-size: 1.3rem;
+}
+
+.gb-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.gb-table thead th {
+    background: #f1f5f9;
+    color: var(--gb-dark);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--gb-border);
+    white-space: nowrap;
+}
+
+.gb-table thead th i {
+    margin-right: 0.4rem;
+    font-size: 1rem;
+    color: var(--gb-primary);
+}
+
+.gb-table tbody tr {
+    border-bottom: 1px solid var(--gb-border);
+    transition: var(--gb-transition);
+}
+
+.gb-table tbody tr:hover {
+    background: #fdf4ff;
+}
+
+.gb-table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+    font-size: 0.95rem;
+    color: var(--gb-dark);
+}
+
+.gb-choice-label strong {
+    font-size: 1rem;
+}
+
+.gb-choice-label small {
+    font-size: 0.8rem;
+}
+
+.gb-code {
+    background: #0f172a;
+    color: #a5b4fc;
+    padding: 0.35rem 0.6rem;
+    border-radius: 0.35rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+}
+
+.gb-row-actions {
+    display: inline-flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 0.85rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    border: 1px solid var(--gb-border);
+    background: white;
+    color: var(--gb-dark);
+    transition: var(--gb-transition);
+}
+
+.btn-action i {
+    font-size: 1rem;
+}
+
+.btn-action-edit {
+    color: var(--gb-primary);
+    border-color: rgba(37, 99, 235, 0.3);
+}
+
+.btn-action-edit:hover {
+    background: rgba(37, 99, 235, 0.08);
+}
+
+.btn-action-delete {
+    color: var(--gb-danger);
+    border-color: rgba(239, 68, 68, 0.4);
+}
+
+.btn-action-delete:hover {
+    background: rgba(239, 68, 68, 0.08);
+}
+
+.gb-table-footer {
+    padding: 1rem 1.5rem;
+    background: var(--gb-light);
+    color: var(--gb-secondary);
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.gb-table-footer i {
+    color: var(--gb-primary);
+}
+
+/* ================================================
+   RESPONSIVE
+   ================================================ */
+
+@media (max-width: 768px) {
+    .gb-header-content {
+        flex-direction: column;
+    }
+
+    .gb-table thead th {
+        font-size: 0.75rem;
+    }
+
+    .gb-row-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-action {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .gb-choices-header {
+        padding: 1rem 0 1.5rem;
+    }
+
+    .gb-header-top {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .gb-header-top .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .gb-node-meta {
+        flex-direction: column;
+    }
+
+    .gb-node-meta .badge {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .gb-table thead {
+        display: none;
+    }
+
+    .gb-table tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        border-radius: var(--gb-radius);
+        border: 1px solid var(--gb-border);
+        padding: 1rem;
+    }
+
+    .gb-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px dashed var(--gb-border);
+    }
+
+    .gb-table tbody td:last-child {
+        border-bottom: none;
+    }
+}

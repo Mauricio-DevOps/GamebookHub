@@ -1,0 +1,569 @@
+/* ================================================
+   GAMEBOOK EDIT - PROFESSIONAL FORM STYLING
+   ================================================ */
+
+:root {
+    --gb-primary: #2563eb;
+    --gb-secondary: #64748b;
+    --gb-success: #10b981;
+    --gb-warning: #f59e0b;
+    --gb-danger: #ef4444;
+    --gb-info: #06b6d4;
+    --gb-light: #f8fafc;
+    --gb-dark: #1e293b;
+    --gb-border: #e2e8f0;
+    --gb-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --gb-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --gb-radius: 0.5rem;
+    --gb-transition: all 0.3s ease;
+}
+
+/* ================================================
+   PAGE HEADER
+   ================================================ */
+
+.gb-edit-header {
+    background: linear-gradient(135deg, var(--gb-primary) 0%, #1e40af 100%);
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    box-shadow: var(--gb-shadow-lg);
+}
+
+.gb-edit-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.gb-edit-header .text-muted {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 0.95rem;
+}
+
+.gb-header-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--gb-radius);
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+/* ================================================
+   CONTAINER & LAYOUT
+   ================================================ */
+
+.gb-edit-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.gb-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* ================================================
+   SECTIONS
+   ================================================ */
+
+.gb-section {
+    background: white;
+    border-radius: var(--gb-radius);
+    padding: 2rem;
+    border: 1px solid var(--gb-border);
+    box-shadow: var(--gb-shadow);
+    transition: var(--gb-transition);
+}
+
+.gb-section:hover {
+    box-shadow: var(--gb-shadow-lg);
+}
+
+.gb-section-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--gb-light);
+}
+
+.gb-section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gb-dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.gb-section-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gb-primary), #1e40af);
+    color: white;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+/* ================================================
+   SUBSECTIONS
+   ================================================ */
+
+.gb-subsection {
+    background: var(--gb-light);
+    border-radius: var(--gb-radius);
+    padding: 1.5rem;
+    border: 1px solid var(--gb-border);
+    margin-bottom: 1.5rem;
+}
+
+.gb-subsection-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gb-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 1rem 0;
+}
+
+.gb-subsection-title i {
+    color: var(--gb-primary);
+    font-size: 1.2rem;
+}
+
+.gb-subsection p {
+    margin: 0;
+}
+
+/* ================================================
+   FORM CONTROLS
+   ================================================ */
+
+.gb-form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gb-dark);
+    margin-bottom: 0.5rem;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.gb-form-label i {
+    font-size: 1rem;
+    color: var(--gb-primary);
+    flex-shrink: 0;
+}
+
+.gb-form-control {
+    border: 1px solid var(--gb-border);
+    border-radius: var(--gb-radius);
+    padding: 0.625rem 0.875rem;
+    font-size: 0.95rem;
+    color: var(--gb-dark);
+    background: white;
+    transition: var(--gb-transition);
+}
+
+.gb-form-control:focus {
+    border-color: var(--gb-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.gb-form-control::placeholder {
+    color: #cbd5e1;
+}
+
+.gb-form-control.font-monospace {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+/* ================================================
+   SWITCHES & TOGGLES
+   ================================================ */
+
+.gb-form-switch {
+    margin-bottom: 0;
+}
+
+.gb-form-switch .form-check-input {
+    width: 2.5rem;
+    height: 1.25rem;
+    margin-top: 0.25rem;
+    cursor: pointer;
+    border: 1px solid var(--gb-border);
+    background: #e2e8f0;
+    transition: var(--gb-transition);
+}
+
+.gb-form-switch .form-check-input:checked {
+    background: var(--gb-primary);
+    border-color: var(--gb-primary);
+}
+
+.gb-form-switch .form-check-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--gb-dark);
+    cursor: pointer;
+    margin-left: 0.5rem;
+    margin-bottom: 0;
+}
+
+.gb-toggle-group {
+    background: var(--gb-light);
+    border: 1px solid var(--gb-border);
+    border-radius: var(--gb-radius);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.gb-toggle-group .form-check-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--gb-dark);
+}
+
+.gb-toggle-group p {
+    margin-top: 0.5rem;
+}
+
+.gb-switch-container p {
+    margin: 0.5rem 0 0 2.75rem;
+}
+
+/* ================================================
+   ATTRIBUTES LIST
+   ================================================ */
+
+.gb-attributes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.attribute-card {
+    background: white;
+    border: 1px solid var(--gb-border);
+    border-radius: var(--gb-radius);
+    padding: 1.25rem;
+    transition: var(--gb-transition);
+}
+
+.attribute-card:hover {
+    border-color: var(--gb-primary);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.05);
+}
+
+.attribute-card .form-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--gb-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 0.35rem;
+}
+
+.attribute-card .btn-danger-outline {
+    background: white;
+    border: 1px solid var(--gb-danger);
+    color: var(--gb-danger);
+    padding: 0.375rem 0.625rem;
+    font-size: 0.85rem;
+    transition: var(--gb-transition);
+}
+
+.attribute-card .btn-danger-outline:hover {
+    background: var(--gb-danger);
+    color: white;
+}
+
+/* ================================================
+   BUTTONS
+   ================================================ */
+
+.btn {
+    border-radius: var(--gb-radius);
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: var(--gb-transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background: var(--gb-primary);
+    border-color: var(--gb-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.btn-secondary {
+    background: var(--gb-secondary);
+    border-color: var(--gb-secondary);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #475569;
+    border-color: #475569;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+}
+
+.btn-outline-primary {
+    background: white;
+    border: 2px solid var(--gb-primary);
+    color: var(--gb-primary);
+}
+
+.btn-outline-primary:hover {
+    background: var(--gb-primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-lg {
+    padding: 0.75rem 1.75rem;
+    font-size: 1rem;
+}
+
+.btn i {
+    font-size: 1.1rem;
+}
+
+/* ================================================
+   ACTIONS
+   ================================================ */
+
+.gb-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-top: 2rem;
+    border-top: 2px solid var(--gb-light);
+}
+
+/* ================================================
+   VALIDATION
+   ================================================ */
+
+.invalid-feedback {
+    color: var(--gb-danger);
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+}
+
+.gb-form-control.is-invalid {
+    border-color: var(--gb-danger);
+}
+
+.gb-form-control.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.alert {
+    border-radius: var(--gb-radius);
+    border-left: 4px solid currentColor;
+    padding: 1rem;
+}
+
+.alert-danger {
+    background: #fef2f2;
+    border-color: var(--gb-danger);
+    color: #7f1d1d;
+}
+
+.alert i {
+    flex-shrink: 0;
+}
+
+/* ================================================
+   RESPONSIVE DESIGN
+   ================================================ */
+
+@media (max-width: 768px) {
+    .gb-edit-header {
+        padding: 1.5rem 0;
+    }
+
+    .gb-edit-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .gb-header-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 1.4rem;
+    }
+
+    .gb-section {
+        padding: 1.5rem;
+    }
+
+    .gb-section-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .gb-section-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .gb-subsection {
+        padding: 1rem;
+    }
+
+    .row.g-3 > [class*="col"] {
+        margin-bottom: 0;
+    }
+
+    .attribute-card .row.g-2 {
+        gap: 0.75rem !important;
+    }
+
+    .attribute-card .col-md-3,
+    .attribute-card .col-md-2,
+    .attribute-card .col-md-5 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .attribute-card .text-end {
+        text-align: left !important;
+    }
+
+    .gb-form-control {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .gb-actions {
+        flex-direction: column;
+    }
+
+    .gb-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .gb-edit-container {
+        padding: 0 0.5rem;
+    }
+
+    .gb-section {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .gb-section-header h2 {
+        font-size: 1.1rem;
+        gap: 0.5rem;
+    }
+
+    .gb-section-number {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+
+    .gb-subsection {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .gb-subsection-title {
+        font-size: 0.95rem;
+        gap: 0.35rem;
+    }
+
+    .gb-form-label {
+        font-size: 0.8rem;
+    }
+
+    .gb-form-control {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .attribute-card {
+        padding: 0.75rem;
+    }
+
+    .attribute-card .row.g-2 {
+        gap: 0.5rem !important;
+    }
+
+    .gb-toggle-group {
+        padding: 0.75rem;
+    }
+
+    .alert {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .gb-actions {
+        gap: 0.5rem;
+        padding-top: 1.5rem;
+    }
+
+    .gb-actions .btn {
+        padding: 0.625rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* ================================================
+   PRINT STYLES
+   ================================================ */
+
+@media print {
+    .gb-edit-header {
+        background: none;
+        border: 1px solid var(--gb-border);
+        color: var(--gb-dark);
+        margin-bottom: 1rem;
+    }
+
+    .gb-section {
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid var(--gb-border);
+    }
+
+    .gb-actions {
+        display: none;
+    }
+}

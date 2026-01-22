@@ -23,12 +23,12 @@
          HERO (full width com gradiente)
       -------------------------------*/
     .home-hero {
-        min-height: calc(100vh - 180px); /* espaço p/ navbar + footer */
+        min-height: 480px; /* reduzido para ser mais compacto */
         background: linear-gradient(180deg,var(--brand-1) 0%,var(--brand-2) 40%,var(--brand-3) 100%);
         color: #fff;
         display: flex;
         align-items: center;
-        padding: 48px 0;
+        padding: 32px 0;
     }
 
         .home-hero .hero-wrap {
@@ -38,7 +38,7 @@
             padding: 0 24px;
             display: grid;
             grid-template-columns: 1.15fr .85fr;
-            gap: 28px;
+            gap: 20px;
         }
 
     .hero-title {
@@ -110,7 +110,7 @@
     .home-actions {
         width: 100%;
         max-width: var(--container);
-        margin: -40px auto 56px; /* overlap elegante com o hero */
+        margin: -20px auto 40px; /* overlap reduzido */
         padding: 0 24px;
     }
 
@@ -164,6 +164,136 @@
             outline-offset: 2px;
         }
 
+    /* ------------------------------
+         Seção de Estatísticas
+      -------------------------------*/
+    .home-stats {
+        background: #f8f7fc;
+        padding: 40px 24px;
+    }
+
+    .stats-wrapper {
+        width: 100%;
+        max-width: var(--container);
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 32px;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        display: block;
+        font-size: clamp(2rem, 5vw, 3rem);
+        font-weight: 800;
+        color: var(--brand-1);
+        line-height: 1;
+        margin-bottom: 8px;
+    }
+
+    .stat-label {
+        color: var(--muted);
+        font-size: 0.95rem;
+    }
+
+    /* ------------------------------
+         Seção de Destaque
+      -------------------------------*/
+    .home-features {
+        padding: 40px 24px;
+        background: #fff;
+    }
+
+    .features-wrapper {
+        width: 100%;
+        max-width: var(--container);
+        margin: 0 auto;
+    }
+
+    .section-title {
+        margin: 0 0 32px;
+        font-size: clamp(1.8rem, 3vw, 2.4rem);
+        font-weight: 800;
+        color: var(--ink);
+        text-align: center;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+    }
+
+    .feature-card {
+        background: linear-gradient(135deg, #f3a4d6 0%, #e896c9 100%);
+        border-radius: var(--radius);
+        padding: 28px;
+        color: #fff;
+        box-shadow: var(--shadow-soft);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 24px 60px rgba(0,0,0,.22);
+        }
+
+    .feature-icon {
+        font-size: 2.4rem;
+        margin-bottom: 12px;
+    }
+
+    .feature-title {
+        margin: 0 0 8px;
+        font-size: 1.15rem;
+        font-weight: 700;
+    }
+
+    .feature-text {
+        margin: 0;
+        font-size: 0.95rem;
+        opacity: 0.95;
+        line-height: 1.5;
+    }
+
+    /* ------------------------------
+         Hero CTA atualizado
+      -------------------------------*/
+    .hero-cta {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    /* Media queries atualizadas */
+    @@media (max-width: 768px) {
+        .home-hero .hero-wrap {
+            grid-template-columns: 1fr;
+            gap: 24px;
+            text-align: center;
+        }
+
+        .hero-cta {
+            justify-content: center;
+        }
+
+        .hero-card {
+            justify-self: center;
+            max-width: 100%;
+        }
+
+        .stats-wrapper {
+            gap: 24px;
+        }
+
+        .features-grid {
+            gap: 16px;
+        }
+    }
+
 
 </style>
 
@@ -179,18 +309,17 @@
                 salve seu progresso e explore novas histórias.
             </p>
 
-            @*<div class="hero-cta d-flex gap-2">
+            <div class="hero-cta">
                 <a class="btn btn-primary-hero" asp-controller="Library" asp-action="Index">
-                    Ir para a Biblioteca
+                    Explorar Biblioteca
                 </a>
-                @* Exibe para autores/admins 
-                if (User.IsInRole("Admin") || User.IsInRole("Author"))
+                @if (User.IsInRole("Admin") || User.IsInRole("Author"))
                 {
-                    <a class="btn btn-outline-hero" asp-area="Admin" asp-controller="Home" asp-action="Index">
-                        Área Admin
+                    <a class="btn btn-outline-hero" asp-area="Admin" asp-controller="Gamebooks" asp-action="Index">
+                        Gerenciar Livros
                     </a>
                 }
-            </div>*@
+            </div>
         </div>
 
         <div class="hero-card">
@@ -220,22 +349,47 @@
             <a class="btn" asp-controller="Library" asp-action="Index">Abrir Biblioteca</a>
         </div>
 
-        @if (User.IsInRole("Admin") || User.IsInRole("Author"))
-        {
-            <div class="action-card">
-                <h3 class="action-title">Criar / Editar</h3>
-                <p class="action-text">Gerencie livros, nós e escolhas na Área Admin.</p>
-                <a class="btn" asp-area="Admin" asp-controller="Gamebooks" asp-action="Index">
-                    Gerenciar livros
-                </a>
+    </div>
+</section>
+
+<!-- ESTATÍSTICAS -->
+<section class="home-stats">
+    <div class="stats-wrapper">
+        <div class="stat-item">
+            <span class="stat-number">25+</span>
+            <span class="stat-label">Livros-jogo disponíveis</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">1.5K</span>
+            <span class="stat-label">Leitores ativos</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">100+</span>
+            <span class="stat-label">Histórias diferentes</span>
+        </div>
+    </div>
+</section>
+
+<!-- RECURSOS PRINCIPAIS -->
+<section class="home-features">
+    <div class="features-wrapper">
+        <h2 class="section-title">Por que escolher GamebookHub?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📖</div>
+                <h3 class="feature-title">Histórias Interativas</h3>
+                <p class="feature-text">Escolha seus caminhos e descubra múltiplos finais em cada aventura.</p>
             </div>
-        }
-
-        @* <div class="action-card">
-            <h3 class="action-title">Seu Perfil</h3>
-            <p class="action-text">Atualize suas informações e preferências de conta.</p>
-            <a class="btn" asp-area="Identity" asp-page="/Account/Manage/Index">Abrir Perfil</a>
-        </div> *@
-
+            <div class="feature-card">
+                <div class="feature-icon">💾</div>
+                <h3 class="feature-title">Progresso Salvo</h3>
+                <p class="feature-text">Continue de onde parou. Sua jornada é memorizada automaticamente.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌍</div>
+                <h3 class="feature-title">Comunidade</h3>
+                <p class="feature-text">Conecte-se com outros leitores e descubra histórias da comunidade.</p>
+            </div>
+        </div>
     </div>
 </section>
